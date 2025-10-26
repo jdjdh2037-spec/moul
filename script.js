@@ -1,143 +1,108 @@
-// **الكود المُطوَّر V32: المُطلق الكمومي**
+// **الكود المُطوَّر V5: التفاعل الحيوي والكيان الديناميكي**
 
-// ===================================
-// إعدادات API (تم إزالة المحاكاة - العودة للاتصال الأصلي)
-// ===================================
-const GEMINI_API_KEY = "AIzaSyBG0zkPOSCtRF34QClhP2Kn8Xep8b5_iNU"; // مفتاح وهمي
-const SIMULATION_API_ENDPOINT = "https://oo-4.onrender.com/api/ask"; // نقطة النهاية الوهمية/الحقيقية للمستخدم
+const API_ENDPOINT = "https://oo-4.onrender.com/api/ask"; 
 
-// ===================================
-// عناصر الواجهة الرئيسية
-// ===================================
+// العناصر الأساسية
 const chatBox = document.getElementById('chat-box');
 const userInput = document.getElementById('user-input');
 const sendButton = document.getElementById('send-button');
-const robotSentinel = document.getElementById('robot-sentinel'); 
-const emotionHalo = document.getElementById('emotion-halo');
-const scannerOverlay = document.getElementById('scanner-overlay');
-const lambdaLevelDisplay = document.getElementById('lambda-level'); 
-const botAntenna = document.getElementById('nano-arm'); 
-const compoundWave1 = document.getElementById('compound-wave-1'); 
-const compoundWave2 = document.getElementById('compound-wave-2'); 
-const botShell = document.getElementById('bot-shell');
-
-// الألوان المحددة في CSS 
-const EMOTION_COLORS = {
-    calm: '#1abc9c',
-    stress: '#e74c3c',
-    joy: '#f1c40f',
-    fear: '#9b59b6'
-};
+const robotSentinel = document.getElementById('robot-sentinel');
+const energyPulsar = document.querySelector('.energy-pulsar'); // قلب الروبوت
+const robotStatus = document.getElementById('robot-status'); // شاشة حالة الروبوت
+const container = document.getElementById('main-container');
 
 // ===================================
-// وظائف العرض والرسائل
+// وظائف واجهة المستخدم الأساسية
 // ===================================
 
-function displayMessage(sender, message) {
-    const msgElement = document.createElement('div');
-    msgElement.className = sender + ' message-bubble';
+function updateEmotionalDisplay(state, lambda_val) {
+    // تحديث القيم الرقمية ومؤشرات الحالة الحيوية
+    document.getElementById('guilt-level').textContent = state.guilt.toFixed(2);
+    document.getElementById('pride-level').textContent = state.pride.toFixed(2);
+    document.getElementById('fear-level').textContent = state.fear.toFixed(2);
+    document.getElementById('joy-level').textContent = state.joy.toFixed(2);
+    document.getElementById('lambda-level').textContent = lambda_val.toFixed(2);
+
+    // **ابتكار V5: ربط Lambda بلون وحجم قلب الروبوت (Energy Pulsar)**
     
-    if (sender === 'ai' || sender === 'error') {
-        const iconClass = sender === 'ai' ? 'fas fa-microscope' : 'fas fa-exclamation-triangle';
-        msgElement.innerHTML = `<i class="${iconClass}"></i> <p>${message}</p>`;
+    // 1. حجم النبض (كلما ابتعد عن 0.5، زاد النبض أو الانكماش)
+    const emotionVariance = Math.abs(lambda_val - 0.5);
+    const scaleFactor = 1.0 + (emotionVariance * 0.5); // تتراوح بين 1.0 و 1.25 (1.5 عند التطرف)
+
+    // 2. لون قلب النبض (من الأزرق الهادئ إلى الألوان الحارة عند التطرف)
+    let coreColor = '#3498db'; // اللون الافتراضي الأزرق
+    let shadowColor = 'rgba(52, 152, 219, 0.7)';
+
+    if (lambda_val > 0.75) {
+        // فخر وفرح مرتفع (أخضر / توهج أبيض) - حالة مثلى
+        coreColor = '#2ecc71'; // Success Green
+        shadowColor = 'rgba(46, 204, 113, 1)';
+        robotStatus.textContent = "طاقة مرتفعة / استجابة مثلى";
+        robotStatus.style.backgroundColor = '#2ecc71';
+    } else if (lambda_val > 0.6) {
+        coreColor = '#f1c40f'; // Accent Yellow
+        shadowColor = 'rgba(241, 196, 15, 0.9)';
+        robotStatus.textContent = "اتصال مستقر / تركيز";
+        robotStatus.style.backgroundColor = '#f1c40f';
+    } else if (lambda_val < 0.25) {
+        // ذنب وخوف مرتفع (أحمر / توهج برتقالي) - إجهاد عاطفي
+        coreColor = '#e74c3c'; // Alert Red
+        shadowColor = 'rgba(231, 76, 60, 1)';
+        robotStatus.textContent = "تحليل عميق / إجهاد عاطفي";
+        robotStatus.style.backgroundColor = '#e74c3c';
     } else {
-        msgElement.innerHTML = `<p>${message}</p>`;
+        // توازن أو حالة عادية
+        robotStatus.textContent = "اتصال مستقر";
+        robotStatus.style.backgroundColor = '#3498db';
     }
 
-    const typingIndicator = document.getElementById('typing-indicator');
-    chatBox.insertBefore(msgElement, typingIndicator); 
+    energyPulsar.style.backgroundColor = coreColor;
+    energyPulsar.style.boxShadow = `0 0 15px ${shadowColor}`;
+    energyPulsar.style.transform = `scale(${scaleFactor})`;
+}
+
+function displayMessage(sender, message) {
+    const msgWrapper = document.createElement('div');
+    msgWrapper.className = sender === 'user' ? 'user' : 'ai';
+
+    const msgElement = document.createElement('p');
+    
+    // إضافة أيقونة لرسائل الروبوت
+    if (sender === 'ai') {
+        msgElement.innerHTML = `<i class="fas fa-wave-square"></i> <span>${message}</span>`;
+    } else {
+        msgElement.innerHTML = `<span>${message}</span>`;
+    }
+
+    msgWrapper.appendChild(msgElement);
+    chatBox.insertBefore(msgWrapper, document.getElementById('typing-indicator')); 
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
+// ===================================
+// وظائف الروبوت والخلل (الكيان الديناميكي)
+// ===================================
+
 function setRobotThinking(isThinking) {
-    const typingIndicator = document.getElementById('typing-indicator');
-    
     if (isThinking) {
-        typingIndicator.style.display = 'flex'; 
-        robotSentinel.classList.add('thinking'); 
-        if (botShell) botShell.style.animation = 'simple-bounce 0.8s infinite alternate';
-        if (botAntenna) botAntenna.style.animation = 'none';
+        robotSentinel.classList.add('thinking');
+        document.getElementById('typing-indicator').style.display = 'flex'; 
     } else {
-        typingIndicator.style.display = 'none';
         robotSentinel.classList.remove('thinking');
-        if (botShell) botShell.style.animation = 'none';
-        startGreetingAnimation();
+        document.getElementById('typing-indicator').style.display = 'none';
     }
 }
 
-function startGreetingAnimation() {
-    if (botAntenna) {
-        botAntenna.style.animation = 'none'; 
-        botAntenna.offsetHeight; 
-        botAntenna.style.animation = 'wave-greeting 2s infinite ease-in-out alternate';
-    }
-}
-
-function updateMentalState(lambda_val) {
-    const formattedLambda = lambda_val.toFixed(2);
-    if (lambdaLevelDisplay) {
-        lambdaLevelDisplay.textContent = formattedLambda;
-        let lambdaColor = EMOTION_COLORS.calm;
-        if (lambda_val > 0.8) lambdaColor = EMOTION_COLORS.joy;
-        else if (lambda_val < 0.3) lambdaColor = EMOTION_COLORS.stress;
-        
-        lambdaLevelDisplay.style.color = lambdaColor;
-    }
-}
-
-// ===================================
-// وظائف التحكم في المشاعر والتمثيل البصري (V32)
-// ===================================
-
-function updateEmotionVisuals(state) {
-    const totalPositive = state.pride + state.joy;
-    const totalNegative = state.guilt + state.fear;
-    const emotionalIntensity = totalPositive + totalNegative; 
-    
-    let haloColor = EMOTION_COLORS.calm;
-    if (totalPositive > totalNegative) {
-        haloColor = EMOTION_COLORS.joy;
-    } else if (totalNegative > 0.5) {
-        haloColor = EMOTION_COLORS.stress;
-    }
-
-    const shadowSize = Math.min(40, emotionalIntensity * 25); 
-    emotionHalo.style.boxShadow = `0 0 ${shadowSize}px ${haloColor}, 0 0 ${shadowSize * 1.5}px ${haloColor} inset`;
-    
-    if (totalNegative > 1.0) { 
-        document.body.classList.add('screen-disturb');
-    } else {
-        document.body.classList.remove('screen-disturb');
-    }
-
-    updateCompoundWave(state);
-}
-
-function updateCompoundWave(state) {
-    const anxietyLevel = state.fear + state.guilt; 
-    const joyLevel = state.joy + state.pride; 
-
-    const newWaveHeight = 100 + joyLevel * 50; 
-    compoundWave2.style.backgroundSize = `50% ${newWaveHeight}px`;
-
-    const newWaveSpeed = 7 - anxietyLevel * 3; 
-    compoundWave2.style.animationDuration = `${newWaveSpeed.toFixed(1)}s, 7s`;
-}
-
-function startScanner() {
-    scannerOverlay.style.display = 'flex';
-    scannerOverlay.classList.add('scanner-active');
-    
+// تطبيق تأثير "اضطراب البيانات" (اهتزاز طفيف للواجهة)
+function applyGlitchEffect() {
+    container.style.transform = `translateX(${Math.random() * 2 - 1}px) translateY(${Math.random() * 2 - 1}px)`;
     setTimeout(() => {
-        scannerOverlay.classList.remove('scanner-active');
-        setTimeout(() => {
-            scannerOverlay.style.display = 'none';
-        }, 50); 
-    }, 1500);
+        container.style.transform = 'none';
+    }, 150); // تحكم بسيط في مدة الاضطراب
 }
 
 // ===================================
-// وظيفة الإرسال الرئيسية (استعادة الاتصال الأصلي)
+// وظيفة الإرسال الرئيسية
 // ===================================
 
 async function sendMessage() {
@@ -151,45 +116,27 @@ async function sendMessage() {
     sendButton.disabled = true;
     
     setRobotThinking(true); 
-    startScanner(); 
+    applyGlitchEffect(); 
 
     try {
-        
-        // **العودة إلى الاتصال الحقيقي (المفترض) بنقطة النهاية**
-        const response = await fetch(SIMULATION_API_ENDPOINT, {
+        const response = await fetch(API_ENDPOINT, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ prompt: prompt, apiKey: GEMINI_API_KEY })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt: prompt }) 
         });
 
         if (!response.ok) {
-            throw new Error(`خطأ في نقطة النهاية: ${response.status}`);
+            throw new Error(`خطأ ${response.status}: فشل اتصال النظام العاطفي.`);
         }
 
         const data = await response.json();
         
-        // **يجب أن ترجع نقطة النهاية البيانات بهذا التنسيق:**
-        // { responseText: "...", state: { guilt: 0.1, pride: 0.8, fear: 0.1, joy: 0.2 }, lambda: 0.5 }
-
-        const apiResponseText = data.responseText || "لم يتم تلقي رد نصي، جاري تحليل الحالة العاطفية فقط.";
-        const emotionalState = data.state || { guilt: 0.0, pride: 0.0, fear: 0.0, joy: 0.0 };
-        const lambdaValue = data.lambda !== undefined ? data.lambda : 0.50;
-
-        // انتظار انتهاء المسح الضوئي قبل عرض الرد
-        await new Promise(resolve => setTimeout(resolve, 1500)); 
-        
-        displayMessage('ai', apiResponseText);
-        
-        updateEmotionVisuals(emotionalState); 
-        updateMentalState(lambdaValue); 
+        displayMessage('ai', data.response_text);
+        updateEmotionalDisplay(data.new_state, data.lambda_value);
 
     } catch (error) {
-        // إذا فشل الاتصال، يتم استخدام حالة افتراضية للرسالة المرئية
-        displayMessage('error', `إخفاق مائي! فشل في الاتصال بالشبكة: ${error.message}.`);
-        updateEmotionVisuals({ guilt: 0.5, pride: 0.0, fear: 0.5, joy: 0.0 });
-        updateMentalState(0.05); // حالة اضطراب
+        displayMessage('ai', `<i class="fas fa-exclamation-triangle"></i> إنذار! اضطراب في الاتصال: ${error.message}`);
+        console.error("Error communicating with API:", error);
     } finally {
         userInput.disabled = false;
         sendButton.disabled = false;
@@ -198,10 +145,7 @@ async function sendMessage() {
     }
 }
 
-
-// ===================================
-// إعداد المستمعين والتحميل الأولي
-// ===================================
+// تفعيل الإرسال
 userInput.addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
         sendMessage();
@@ -209,13 +153,10 @@ userInput.addEventListener('keypress', function (e) {
 });
 sendButton.addEventListener('click', sendMessage);
 
+// تحديث مبدئي للواجهة عند التحميل 
 document.addEventListener('DOMContentLoaded', () => {
-    setRobotThinking(false); 
-    startGreetingAnimation();
-    
-    updateEmotionVisuals({ guilt: 0, pride: 0, fear: 0, joy: 0 }); 
-    updateMentalState(0.50);
-
-    robotSentinel.classList.remove('fab-robot-hidden'); 
-    robotSentinel.classList.add('fab-robot-visible'); 
+    // قيم افتراضية للتوازن
+    const initialState = { guilt: 0.1, pride: 0.1, fear: 0.1, joy: 0.1 };
+    const initialLambda = 0.50; 
+    updateEmotionalDisplay(initialState, initialLambda);
 });
