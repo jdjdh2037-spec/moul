@@ -1,6 +1,8 @@
-// **الكود المُطوَّر V5: التفاعل الحيوي والكيان الديناميكي**
+// **الكود المُطوَّر V5.1: الكيان الودود والمحاكي العاطفي**
 
-const API_ENDPOINT = "https://oo-4.onrender.com/api/ask"; 
+// !!! يجب استبدال هذا الرابط Placeholder بالرابط الحقيقي لخادم الذكاء الاصطناعي الجديد (الباك إند) !!!
+const API_ENDPOINT = "https://[رابط خادم الذكاء الاصطناعي الجديد]/api/ask"; 
+// مثال: https://your-new-ai-server.com/api/ask
 
 // العناصر الأساسية
 const chatBox = document.getElementById('chat-box');
@@ -10,10 +12,36 @@ const robotSentinel = document.getElementById('robot-sentinel');
 const energyPulsar = document.querySelector('.energy-pulsar'); // قلب الروبوت
 const robotStatus = document.getElementById('robot-status'); // شاشة حالة الروبوت
 const container = document.getElementById('main-container');
+const robotMoodIcon = document.getElementById('robot-mood-icon');
 
 // ===================================
 // وظائف واجهة المستخدم الأساسية
 // ===================================
+
+function updateRobotMood(lambda_val) {
+    // إزالة جميع حالات المزاج السابقة
+    robotSentinel.classList.remove('happy', 'sad', 'thinking');
+
+    // تحديد المزاج بناءً على مؤشر التوازن (Lambda)
+    if (lambda_val > 0.75) {
+        // توازن عاطفي مرتفع (فرح / فخر)
+        robotSentinel.classList.add('happy');
+        robotMoodIcon.className = 'fas fa-smile robot-mood-icon'; // وجه سعيد
+        robotStatus.textContent = "طاقة مرتفعة / إيجابية";
+        robotStatus.style.backgroundColor = '#2ecc71'; // أخضر
+    } else if (lambda_val < 0.25) {
+        // توازن عاطفي منخفض (خوف / ذنب)
+        robotSentinel.classList.add('sad');
+        robotMoodIcon.className = 'fas fa-frown-open robot-mood-icon'; // وجه حزين
+        robotStatus.textContent = "تحليل عميق / ضغط عاطفي";
+        robotStatus.style.backgroundColor = '#e74c3c'; // أحمر
+    } else {
+        // حالة استقرار أو حياد
+        robotMoodIcon.className = 'fas fa-robot robot-mood-icon'; // روبوت عادي
+        robotStatus.textContent = "اتصال مستقر";
+        robotStatus.style.backgroundColor = '#3498db'; // أزرق
+    }
+}
 
 function updateEmotionalDisplay(state, lambda_val) {
     // تحديث القيم الرقمية ومؤشرات الحالة الحيوية
@@ -23,41 +51,13 @@ function updateEmotionalDisplay(state, lambda_val) {
     document.getElementById('joy-level').textContent = state.joy.toFixed(2);
     document.getElementById('lambda-level').textContent = lambda_val.toFixed(2);
 
-    // **ابتكار V5: ربط Lambda بلون وحجم قلب الروبوت (Energy Pulsar)**
+    // تحديث حالة الروبوت الصغير بناءً على المؤشر
+    updateRobotMood(lambda_val);
     
-    // 1. حجم النبض (كلما ابتعد عن 0.5، زاد النبض أو الانكماش)
+    // ربط Lambda بلون وحجم قلب النبض (كتأثير بصري خفي)
     const emotionVariance = Math.abs(lambda_val - 0.5);
-    const scaleFactor = 1.0 + (emotionVariance * 0.5); // تتراوح بين 1.0 و 1.25 (1.5 عند التطرف)
+    const scaleFactor = 1.0 + (emotionVariance * 0.5);
 
-    // 2. لون قلب النبض (من الأزرق الهادئ إلى الألوان الحارة عند التطرف)
-    let coreColor = '#3498db'; // اللون الافتراضي الأزرق
-    let shadowColor = 'rgba(52, 152, 219, 0.7)';
-
-    if (lambda_val > 0.75) {
-        // فخر وفرح مرتفع (أخضر / توهج أبيض) - حالة مثلى
-        coreColor = '#2ecc71'; // Success Green
-        shadowColor = 'rgba(46, 204, 113, 1)';
-        robotStatus.textContent = "طاقة مرتفعة / استجابة مثلى";
-        robotStatus.style.backgroundColor = '#2ecc71';
-    } else if (lambda_val > 0.6) {
-        coreColor = '#f1c40f'; // Accent Yellow
-        shadowColor = 'rgba(241, 196, 15, 0.9)';
-        robotStatus.textContent = "اتصال مستقر / تركيز";
-        robotStatus.style.backgroundColor = '#f1c40f';
-    } else if (lambda_val < 0.25) {
-        // ذنب وخوف مرتفع (أحمر / توهج برتقالي) - إجهاد عاطفي
-        coreColor = '#e74c3c'; // Alert Red
-        shadowColor = 'rgba(231, 76, 60, 1)';
-        robotStatus.textContent = "تحليل عميق / إجهاد عاطفي";
-        robotStatus.style.backgroundColor = '#e74c3c';
-    } else {
-        // توازن أو حالة عادية
-        robotStatus.textContent = "اتصال مستقر";
-        robotStatus.style.backgroundColor = '#3498db';
-    }
-
-    energyPulsar.style.backgroundColor = coreColor;
-    energyPulsar.style.boxShadow = `0 0 15px ${shadowColor}`;
     energyPulsar.style.transform = `scale(${scaleFactor})`;
 }
 
@@ -67,13 +67,10 @@ function displayMessage(sender, message) {
 
     const msgElement = document.createElement('p');
     
-    // إضافة أيقونة لرسائل الروبوت
-    if (sender === 'ai') {
-        msgElement.innerHTML = `<i class="fas fa-wave-square"></i> <span>${message}</span>`;
-    } else {
-        msgElement.innerHTML = `<span>${message}</span>`;
-    }
-
+    // إضافة أيقونة لرسائل الروبوت (تغيير الأيقونة لتكون رسمية)
+    const iconClass = sender === 'ai' ? 'fas fa-handshake' : '';
+    msgElement.innerHTML = `<i class="${iconClass}"></i> <span>${message}</span>`;
+    
     msgWrapper.appendChild(msgElement);
     chatBox.insertBefore(msgWrapper, document.getElementById('typing-indicator')); 
     chatBox.scrollTop = chatBox.scrollHeight;
@@ -86,19 +83,27 @@ function displayMessage(sender, message) {
 function setRobotThinking(isThinking) {
     if (isThinking) {
         robotSentinel.classList.add('thinking');
+        robotMoodIcon.className = 'fas fa-brain robot-mood-icon'; // أيقونة "دماغ" أو "تفكير"
         document.getElementById('typing-indicator').style.display = 'flex'; 
     } else {
+        // عند الانتهاء من التفكير، نعود إلى الحالة العاطفية المحددة في updateRobotMood
         robotSentinel.classList.remove('thinking');
         document.getElementById('typing-indicator').style.display = 'none';
+        
+        // تطبيق تحديث الحالة العاطفية الأخير
+        const lambdaValue = parseFloat(document.getElementById('lambda-level').textContent);
+        if (!isNaN(lambdaValue)) {
+            updateRobotMood(lambdaValue);
+        }
     }
 }
 
-// تطبيق تأثير "اضطراب البيانات" (اهتزاز طفيف للواجهة)
+// تطبيق تأثير "اضطراب البيانات"
 function applyGlitchEffect() {
     container.style.transform = `translateX(${Math.random() * 2 - 1}px) translateY(${Math.random() * 2 - 1}px)`;
     setTimeout(() => {
         container.style.transform = 'none';
-    }, 150); // تحكم بسيط في مدة الاضطراب
+    }, 150); 
 }
 
 // ===================================
@@ -126,7 +131,7 @@ async function sendMessage() {
         });
 
         if (!response.ok) {
-            throw new Error(`خطأ ${response.status}: فشل اتصال النظام العاطفي.`);
+            throw new Error(`خطأ ${response.status}: فشل اتصال النظام العاطفي. (تحقق من رابط API_ENDPOINT)`);
         }
 
         const data = await response.json();
@@ -135,7 +140,13 @@ async function sendMessage() {
         updateEmotionalDisplay(data.new_state, data.lambda_value);
 
     } catch (error) {
-        displayMessage('ai', `<i class="fas fa-exclamation-triangle"></i> إنذار! اضطراب في الاتصال: ${error.message}`);
+        // في حالة الخطأ، نجعل الروبوت يبدو قلقاً
+        const lambdaValue = 0.2; // قيمة منخفضة للإشارة إلى القلق أو الخطأ
+        const initialState = { guilt: 0.5, pride: 0.0, fear: 0.5, joy: 0.0 };
+        
+        displayMessage('ai', `<i class="fas fa-exclamation-triangle"></i> إنذار: اضطراب في الاتصال. ${error.message}`);
+        updateEmotionalDisplay(initialState, lambdaValue); // تحديث الواجهة لحالة الخطأ
+        
         console.error("Error communicating with API:", error);
     } finally {
         userInput.disabled = false;
@@ -159,4 +170,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const initialState = { guilt: 0.1, pride: 0.1, fear: 0.1, joy: 0.1 };
     const initialLambda = 0.50; 
     updateEmotionalDisplay(initialState, initialLambda);
+    
+    // إضافة أيقونة رسمية لرسالة الترحيب
+    const initialMessage = document.querySelector('.initial-message i');
+    if (initialMessage) {
+        initialMessage.className = 'fas fa-handshake';
+    }
 });
