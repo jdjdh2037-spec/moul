@@ -1,7 +1,7 @@
-// **الكود المُطوَّر V28: الذبذبة العاطفية واللزوجة**
+// **الكود المُطوَّر V29: المحلل العاطفي الثابت**
 
 // ===================================
-// إعدادات API (تذكير: تحتاج إلى API حقيقي لـ Gemini)
+// إعدادات API (للمحاكاة)
 // ===================================
 const GEMINI_API_KEY = "AIzaSyBG0zkPOSCtRF34QClhP2Kn8Xep8b5_iNU"; // مفتاح وهمي
 const SIMULATION_API_ENDPOINT = "https://oo-4.onrender.com/api/ask"; // نقطة نهاية وهمية
@@ -12,26 +12,22 @@ const SIMULATION_API_ENDPOINT = "https://oo-4.onrender.com/api/ask"; // نقطة
 const chatBox = document.getElementById('chat-box');
 const userInput = document.getElementById('user-input');
 const sendButton = document.getElementById('send-button');
-const robotSentinel = document.getElementById('robot-sentinel');
+const robotSentinel = document.getElementById('robot-sentinel'); 
 const nanoHologram = document.getElementById('nano-hologram-structure');
 const emotionHalo = document.getElementById('emotion-halo');
 const scannerOverlay = document.getElementById('scanner-overlay');
-const mentalStateDisplay = document.getElementById('mental-state'); 
+const lambdaLevelDisplay = document.getElementById('lambda-level'); 
 const nanoArm = document.getElementById('nano-arm'); 
-const compoundWave1 = document.getElementById('compound-wave-1'); // الموجة الخلفية
-const compoundWave2 = document.getElementById('compound-wave-2'); // الموجة الأمامية
+const compoundWave1 = document.getElementById('compound-wave-1'); 
+const compoundWave2 = document.getElementById('compound-wave-2'); 
 
-// الألوان المحددة في CSS لربطها بـ JS
+// الألوان المحددة في CSS 
 const EMOTION_COLORS = {
     calm: '#1abc9c',
     stress: '#e74c3c',
     joy: '#f1c40f',
     fear: '#9b59b6'
 };
-
-let isMobile = window.innerWidth <= 768;
-let lastScrollTop = 0;
-let scrollTimer = null;
 
 // ===================================
 // وظائف العرض والرسائل
@@ -74,30 +70,30 @@ function startGreetingAnimation() {
     if (nanoArm) {
         nanoArm.style.animation = 'none'; 
         nanoArm.offsetHeight; 
+        // تغيير الأيقونة أثناء الحركة لتظهر فحص النبض
+        const nanoHandIcon = nanoArm.querySelector('.nano-hand i');
+        if (nanoHandIcon) nanoHandIcon.className = 'fas fa-heart-pulse'; 
+
         nanoArm.style.animation = 'wave-greeting 2s infinite ease-in-out alternate';
     }
 }
 
 function updateMentalState(lambda_val) {
-    let stateText = 'تحليل اللزوجة V28';
-    let stateColor = EMOTION_COLORS.calm;
-
-    if (lambda_val > 0.8) {
-        stateText = 'انسياب كمومي كامل';
-        stateColor = EMOTION_COLORS.joy;
-    } else if (lambda_val < 0.2) {
-        stateText = 'اضطراب في الأمواج الكمومية';
-        stateColor = EMOTION_COLORS.fear;
-    } 
-    
-    if (mentalStateDisplay) {
-        mentalStateDisplay.textContent = stateText;
-        mentalStateDisplay.style.backgroundColor = stateColor;
+    // تنسيق Lambda إلى رقمين عشريين
+    const formattedLambda = lambda_val.toFixed(2);
+    if (lambdaLevelDisplay) {
+        lambdaLevelDisplay.textContent = formattedLambda;
+        // تغيير اللون بناءً على قيمة Lambda
+        let lambdaColor = EMOTION_COLORS.calm;
+        if (lambda_val > 0.8) lambdaColor = EMOTION_COLORS.joy;
+        else if (lambda_val < 0.3) lambdaColor = EMOTION_COLORS.stress;
+        
+        lambdaLevelDisplay.style.color = lambdaColor;
     }
 }
 
 // ===================================
-// وظائف التحكم في المشاعر والتمثيل البصري (V28)
+// وظائف التحكم في المشاعر والتمثيل البصري (V29)
 // ===================================
 
 function updateEmotionVisuals(state) {
@@ -113,12 +109,11 @@ function updateEmotionVisuals(state) {
         haloColor = EMOTION_COLORS.stress;
     }
 
-    // ربط الشدة بحجم الـ shadow
     const shadowSize = Math.min(40, emotionalIntensity * 25); 
     emotionHalo.style.boxShadow = `0 0 ${shadowSize}px ${haloColor}, 0 0 ${shadowSize * 1.5}px ${haloColor} inset`;
     
     // 2. تغير مادة الروبوت (اللزوجة)
-    if (totalNegative > totalPositive * 1.5) { // إذا كانت السلبية أعلى بكثير
+    if (totalNegative > totalPositive * 1.5) { 
         nanoHologram.classList.add('viscosity-turbid');
         nanoHologram.classList.remove('viscosity-clear');
     } else {
@@ -138,72 +133,29 @@ function updateEmotionVisuals(state) {
 }
 
 function updateCompoundWave(state) {
-    const anxietyLevel = state.fear + state.guilt; // يمثل التردد (السرعة)
-    const joyLevel = state.joy + state.pride; // يمثل الارتفاع (Amplitude)
+    const anxietyLevel = state.fear + state.guilt; 
+    const joyLevel = state.joy + state.pride; 
 
-    // تغيير ارتفاع الموجة الأمامية (background-size: height)
+    // تغيير ارتفاع الموجة الأمامية 
     const newWaveHeight = 100 + joyLevel * 50; 
     compoundWave2.style.backgroundSize = `50% ${newWaveHeight}px`;
 
-    // تغيير سرعة الموجة بناءً على القلق/التوتر (Frequency)
-    const newWaveSpeed = 7 - anxietyLevel * 3; // من 7 ثواني (هادئ) إلى 4 ثواني (سريع)
+    // تغيير سرعة الموجة بناءً على القلق/التوتر 
+    const newWaveSpeed = 7 - anxietyLevel * 3; 
     compoundWave2.style.animationDuration = `${newWaveSpeed.toFixed(1)}s, 7s`;
 }
 
-// ------------------------------------
-// وظيفة المسح الضوئي (الروبوت البصاص)
-// ------------------------------------
 function startScanner() {
     scannerOverlay.style.display = 'flex';
     scannerOverlay.classList.add('scanner-active');
     
-    // إزالة شاشة المسح بعد 1.5 ثانية (مدة الأنميشن)
     setTimeout(() => {
         scannerOverlay.classList.remove('scanner-active');
-        // تأخير بسيط للتأكد من انتهاء الأنميشن قبل إخفائه
         setTimeout(() => {
             scannerOverlay.style.display = 'none';
         }, 50); 
     }, 1500);
 }
-
-// ------------------------------------
-// وظائف FAB Logic والتموّج السريع (من V27)
-// ------------------------------------
-
-function handleRobotFAB() {
-    if (!isMobile) return; 
-
-    const st = window.pageYOffset || document.documentElement.scrollTop;
-    
-    if (st < lastScrollTop) { 
-        robotSentinel.classList.add('fab-robot-visible');
-        robotSentinel.classList.remove('fab-robot-hidden');
-    } 
-    else if (st > lastScrollTop && st > 50) {
-        robotSentinel.classList.add('fab-robot-hidden');
-        robotSentinel.classList.remove('fab-robot-visible');
-    }
-    
-    lastScrollTop = st <= 0 ? 0 : st; 
-}
-
-function handleScrollRipple() {
-    const currentTime = Date.now();
-    const timeDiff = currentTime - lastScrollTime;
-    
-    if (timeDiff < 50) { 
-        scrollRippleOverlay.classList.add('scroll-ripple-active');
-        
-        clearTimeout(scrollTimer);
-        scrollTimer = setTimeout(() => {
-            scrollRippleOverlay.classList.remove('scroll-ripple-active');
-        }, 300); 
-    }
-
-    lastScrollTime = currentTime;
-}
-
 
 // ===================================
 // وظيفة الإرسال الرئيسية (محاكاة AI)
@@ -220,28 +172,27 @@ async function sendMessage() {
     sendButton.disabled = true;
     
     setRobotThinking(true); 
-    startScanner(); // تفعيل المسح البصاص عند الإرسال
+    startScanner(); 
 
     try {
+        
         // **محاكاة الرد**
         const fakeResponseText = "تم تحليل النص. حالة المشاعر الداخلية للذكاء الاصطناعي تظهر اضطراباً في الأمواج الكمومية بسبب تناقض البيانات المدخلة. يرجى إعادة الصياغة للحصول على انسياب مائي كامل.";
 
         // **محاكاة بيانات القياسات المعقدة (للتجربة)**
         const simulatedState = {
-            // محاكاة نتيجة سلبية عالية لـ اختبار الواجهة
             guilt: 0.8, 
             pride: 0.1,
             fear: 0.5, 
             joy: 0.2
         };
-        const simulatedLambda = 0.15; // قيمة منخفضة
+        const simulatedLambda = 0.15; 
 
         // انتظار انتهاء المسح الضوئي قبل عرض الرد
         await new Promise(resolve => setTimeout(resolve, 1500)); 
         
         displayMessage('ai', fakeResponseText);
         
-        // تطبيق التحديثات المرئية الجديدة
         updateEmotionVisuals(simulatedState); 
         updateMentalState(simulatedLambda); 
 
@@ -266,12 +217,6 @@ userInput.addEventListener('keypress', function (e) {
 });
 sendButton.addEventListener('click', sendMessage);
 
-// إضافة مستمعي أحداث التمرير (V27/V28)
-window.addEventListener('scroll', () => {
-    handleRobotFAB(); 
-    handleScrollRipple();
-});
-
 document.addEventListener('DOMContentLoaded', () => {
     setRobotThinking(false); 
     startGreetingAnimation();
@@ -280,18 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateEmotionVisuals({ guilt: 0, pride: 0, fear: 0, joy: 0 }); 
     updateMentalState(0.50);
 
-    // التأكد من إخفاء الروبوت في البداية على الهاتف
-    if (isMobile) {
-        robotSentinel.classList.add('fab-robot-hidden');
-    }
-});
-
-// تحديث متغير isMobile عند تغيير حجم النافذة
-window.addEventListener('resize', () => {
-    isMobile = window.innerWidth <= 768;
-    if (!isMobile) {
-        // إزالة تحكم FAB في وضع سطح المكتب
-        robotSentinel.classList.remove('fab-robot-hidden');
-        robotSentinel.classList.remove('fab-robot-visible');
-    }
+    // الروبوت مرئي وثابت دائماً (V29)
+    robotSentinel.classList.remove('fab-robot-hidden'); 
+    robotSentinel.classList.add('fab-robot-visible'); 
 });
