@@ -1,4 +1,4 @@
-// **الكود المُطوَّر V29: المحلل العاطفي الثابت**
+// **الكود المُطوَّر V30: المحلل الكمومي النظيف**
 
 // ===================================
 // إعدادات API (للمحاكاة)
@@ -70,7 +70,6 @@ function startGreetingAnimation() {
     if (nanoArm) {
         nanoArm.style.animation = 'none'; 
         nanoArm.offsetHeight; 
-        // تغيير الأيقونة أثناء الحركة لتظهر فحص النبض
         const nanoHandIcon = nanoArm.querySelector('.nano-hand i');
         if (nanoHandIcon) nanoHandIcon.className = 'fas fa-heart-pulse'; 
 
@@ -79,11 +78,9 @@ function startGreetingAnimation() {
 }
 
 function updateMentalState(lambda_val) {
-    // تنسيق Lambda إلى رقمين عشريين
     const formattedLambda = lambda_val.toFixed(2);
     if (lambdaLevelDisplay) {
         lambdaLevelDisplay.textContent = formattedLambda;
-        // تغيير اللون بناءً على قيمة Lambda
         let lambdaColor = EMOTION_COLORS.calm;
         if (lambda_val > 0.8) lambdaColor = EMOTION_COLORS.joy;
         else if (lambda_val < 0.3) lambdaColor = EMOTION_COLORS.stress;
@@ -93,7 +90,7 @@ function updateMentalState(lambda_val) {
 }
 
 // ===================================
-// وظائف التحكم في المشاعر والتمثيل البصري (V29)
+// وظائف التحكم في المشاعر والتمثيل البصري (V30)
 // ===================================
 
 function updateEmotionVisuals(state) {
@@ -136,11 +133,9 @@ function updateCompoundWave(state) {
     const anxietyLevel = state.fear + state.guilt; 
     const joyLevel = state.joy + state.pride; 
 
-    // تغيير ارتفاع الموجة الأمامية 
     const newWaveHeight = 100 + joyLevel * 50; 
     compoundWave2.style.backgroundSize = `50% ${newWaveHeight}px`;
 
-    // تغيير سرعة الموجة بناءً على القلق/التوتر 
     const newWaveSpeed = 7 - anxietyLevel * 3; 
     compoundWave2.style.animationDuration = `${newWaveSpeed.toFixed(1)}s, 7s`;
 }
@@ -176,7 +171,7 @@ async function sendMessage() {
 
     try {
         
-        // **محاكاة الرد**
+        // **محاكاة الرد (بيانات AI صحيحة)**
         const fakeResponseText = "تم تحليل النص. حالة المشاعر الداخلية للذكاء الاصطناعي تظهر اضطراباً في الأمواج الكمومية بسبب تناقض البيانات المدخلة. يرجى إعادة الصياغة للحصول على انسياب مائي كامل.";
 
         // **محاكاة بيانات القياسات المعقدة (للتجربة)**
@@ -186,13 +181,14 @@ async function sendMessage() {
             fear: 0.5, 
             joy: 0.2
         };
-        const simulatedLambda = 0.15; 
+        const simulatedLambda = 0.15; // قيمة منخفضة تدل على الاضطراب
 
         // انتظار انتهاء المسح الضوئي قبل عرض الرد
         await new Promise(resolve => setTimeout(resolve, 1500)); 
         
         displayMessage('ai', fakeResponseText);
         
+        // تطبيق التحديثات المرئية الجديدة
         updateEmotionVisuals(simulatedState); 
         updateMentalState(simulatedLambda); 
 
@@ -225,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateEmotionVisuals({ guilt: 0, pride: 0, fear: 0, joy: 0 }); 
     updateMentalState(0.50);
 
-    // الروبوت مرئي وثابت دائماً (V29)
+    // الروبوت مرئي وثابت دائماً (V30)
     robotSentinel.classList.remove('fab-robot-hidden'); 
     robotSentinel.classList.add('fab-robot-visible'); 
 });
