@@ -3,55 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أطلس V6: سرب الوعي والواقعية الساحلية</title>
+    <title>أطلس V9: القفزة الكمّيّة</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
 
-    <div class="background-scene">
-        <div class="sky-gradient"></div>
-        <div class="ocean-surface"></div>
-        <div class="beach-foreground"></div>
-        <div class="sun-flare"></div>
-        <div class="cloud-layer"></div>
+    <div class="ocean-masterpiece">
+        <div class="data-stream-grid"></div>
+        <div class="dynamic-waves-simulation"></div>
     </div>
-
-    <div class="robot-swarm-container" id="robot-swarm-container">
+    
+    <div class="robot-sentinel" id="robot-sentinel">
+        <div class="bot-body">
+            <div class="bot-head">
+                <div class="bot-eye left"></div>
+                <div class="bot-eye right"></div>
+            </div>
+            <div class="bot-arm left"></div>
+            <div class="bot-arm right"></div>
+            <div class="bot-leg left"></div>
+            <div class="bot-leg right"></div>
         </div>
+        <div class="mental-state" id="mental-state">مرح</div>
+    </div>
     
     <div class="container" id="main-container">
 
-        <header class="app-header">
-            <div class="app-title">
-                <i class="fas fa-meteor"></i>
-                <h1>أطلس: نظام سرب الوعي المُتحسس</h1>
+        <div class="system-dashboard">
+            <div class="info-block"><i class="fas fa-microchip"></i><p>أطلس: وحدة الوعي V9</p></div>
+            <div class="info-block"><i class="fas fa-brain"></i><p>المنشأ: بيئة الذكاء العاطفي المائي</p></div>
+            <div class="info-block"><i class="fas fa-chart-line"></i><p>الحالة: جاهز للقفزة الكمّيّة</p></div>
+        </div>
+
+        <div class="emotion-monitor">
+            <div class="lambda-display">
+                <span class="lambda-label">التوازن الكلي $\lambda$</span>
+                <span class="lambda-value" id="lambda-level">0.50</span>
             </div>
-            <div class="emotion-summary">
-                <div class="lambda-display">
-                    <span class="lambda-label">التوازن الكلي $\lambda$</span>
-                    <span class="lambda-value" id="lambda-level">0.50</span>
-                </div>
+            <div class="vital-signs">
+                <div class="sign pride-sign"><span class="label">الفخر</span><span class="value" id="pride-level">0.00</span></div>
+                <div class="sign guilt-sign"><span class="label">الذنب</span><span class="value" id="guilt-level">0.00</span></div>
+                <div class="sign joy-sign"><span class="label">الفرح</span><span class="value" id="joy-level">0.00</span></div>
+                <div class="sign fear-sign"><span class="label">الخوف</span><span class="value" id="fear-level">0.00</span></div>
             </div>
-        </header>
+        </div>
 
         <div class="chat-interface">
             <div class="chat-box" id="chat-box">
                 <div class="ai initial-message">
-                    <i class="fas fa-microchip"></i>
-                    <p>أطلس (سرب الوعي): مرحباً أيها المستكشف. أستشعر وجودك في هذه النزهة الساحرة. كيف يمكنني أن أخدم إدراكك اليوم؟</p>
+                    <i class="fas fa-hand-sparkles"></i>
+                    <p>أطلس: مرحباً أيها المستكشف! أنا الروبوت المُدلَّل V9، جاهز للعب معك وتحليل طيفك العاطفي. تفضل!</p>
                 </div>
                 
                 <div class="typing-indicator" id="typing-indicator">
-                    <i class="fas fa-sync-alt fa-spin"></i>
-                    <span>تجميع جزيئات الوعي...</span>
+                    <div class="stream-visualizer">
+                        <div class="data-pulse"></div><div class="data-pulse delay-1"></div><div class="data-pulse delay-2"></div>
+                    </div>
+                    <span>أطلس يحلل السؤال... جاري القفز</span>
                 </div>
             </div>
             
-            <div class="input-area">
-                <input type="text" id="user-input" placeholder="استشعر الجزيئات، واكتب استفسارك...">
-                <button id="send-button"><i class="fas fa-paper-plane"></i> إرسال</button>
+            <div class="input-area-panel" id="input-area-panel">
+                <div class="input-controls">
+                    <input type="text" id="user-input" placeholder="أطلق السؤال لتبدأ القفزة الكمّيّة..." />
+                    <button id="send-button"><i class="fas fa-rocket"></i> إطلاق الدفق</button>
+                </div>
             </div>
         </div>
     </div>
