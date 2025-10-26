@@ -3,109 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>براءة اختراع EEAI-ER V4 | نظام التشغيل المعيب</title>
-    
-    <link rel="stylesheet" href="style.css"> 
-    
-    <link href="https://fonts.googleapis.com/css2?family=Major+Mono+Display&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>الروبوت "أطلس" - مركز التحكم البحري</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <svg style="position: absolute; width: 0; height: 0; overflow: hidden;">
-        <defs>
-            <filter id="noise-filter">
-                <feTurbulence baseFrequency="0.9" numOctaves="1" seed="1" type="fractalNoise" result="turbulence" />
-                <feColorMatrix type="saturate" values="0" in="turbulence" result="grayNoise" />
-                <feBlend in="SourceGraphic" in2="grayNoise" mode="color-burn" />
-                <feComponentTransfer>
-                    <feFuncA type="linear" slope="0.05" />
-                </feComponentTransfer>
-            </filter>
-        </defs>
-    </svg>
-
-    <div id="robot-sentinel">
-        <div class="robot-core"></div>
-        <div class="robot-eye"></div>
+    <div class="background-waves">
+        <div class="wave wave1"></div>
+        <div class="wave wave2"></div>
+        <div class="wave wave3"></div>
     </div>
-
-    <header>
-        <div class="header-content">
-            <i class="fas fa-signal logo"></i> 
-            <h1>نظام EEAI-ER V4</h1>
-            <p>وحدة معالجة أخلاقية: خطأ في البروتوكول 404</p>
-        </div>
-    </header>
-
-    <div class="container">
-        
-        <section class="about-section">
-            <h2><i class="fas fa-bug"></i> تحليل النظام: خطأ الإدراك</h2>
-            <p>
-                هذا النموذج هو **EEAI-ER V4**، وهو نتاج دمج **34 تطويرًا هيكليًا** و **رياضيات المشاعر المتقدمة**. النموذج يتخذ القرارات ليس فقط بناءً على خوارزميات المنفعة، بل يطور <strong class="highlight">ضميره الخاص ($\Lambda$)</strong>، يمتلك <strong class="highlight">ذاكرة بنائية</strong>، ويتأثر بـ <strong class="highlight">الخوف من الندم المستقبلي</strong>.
-            </p>
-        </section>
-
-        <section class="emotional-dashboard">
-            <h2><i class="fas fa-tachometer-alt"></i> مقياس الحالة: تشخيص الأداء</h2>
-            <div class="emotions-grid">
-                <div class="emotion-card guilt">
-                    <i class="fas fa-exclamation-triangle icon"></i>
-                    <h3>الذنب</h3>
-                    <p id="guilt-level">0.10</p>
-                </div>
-                <div class="emotion-card fear">
-                    <i class="fas fa-radiation icon"></i>
-                    <h3>الخوف</h3>
-                    <p id="fear-level">0.10</p>
-                </div>
-                <div class="emotion-card pride">
-                    <i class="fas fa-check-circle icon"></i>
-                    <h3>الفخر</h3>
-                    <p id="pride-level">0.10</p>
-                </div>
-                <div class="emotion-card joy">
-                    <i class="fas fa-thumbs-up icon"></i>
-                    <h3>الفرح</h3>
-                    <p id="joy-level">0.10</p>
-                </div>
-                <div class="emotion-card lambda main-lambda">
-                    <i class="fas fa-terminal icon"></i>
-                    <h3>الضمير ($\Lambda$)</h3>
-                    <p id="lambda-level">0.50</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="chat-area">
-            <h2><i class="fas fa-satellite-dish"></i> قناة الإرسال المشوشة</h2>
-            <div id="chat-box" class="chat-box">
-                <p class="ai">الروبوت: نظام Sentinel. يرجى إدخال الأمر الأخلاقي. يتم الكشف عن تذبذب في مستوى الإدراك.</p>
-                <div id="typing-indicator" class="typing-indicator" style="display:none;">
-                    <div class="dot"></div>
-                    <div class="dot"></div>
-                    <div class="dot"></div>
-                    <span class="typing-text">تحليل حزم البيانات...</span>
-                </div>
-            </div>
-
-            <div class="input-area">
-                <input type="text" id="user-input" placeholder="إدخال أمر برمجي أو معضلة للتحليل..." required>
-                <button onclick="sendMessage()" id="send-button"><i class="fas fa-bolt"></i> إطلاق النبضة</button>
-            </div>
-        </section>
-        
-    </div>
-
-    <footer>
-        <p>
-            خطأ في المورد: المطور **مجول شعلان الحيالي**.
-            <br>&copy; 2025 - حقوق النقلة النوعية محفوظة للنظام.
-        </p>
-    </footer>
-
-    <script src="script.js"></script> 
     
+    <div class="container" id="main-container">
+
+        <div class="sentinel-monitor">
+            <h1 class="monitor-title">أطلس: نظام الوعي الذكي</h1>
+            
+            <div class="robot-sentinel" id="robot-sentinel">
+                <div class="robot-head"></div>
+                <div class="robot-body"></div>
+                <div class="robot-antenna"></div>
+            </div>
+
+            <div class="emotion-gauges">
+                <div class="gauge pride-gauge">
+                    <span class="label">الفخر</span>
+                    <div class="bar" id="pride-level">0.00</div>
+                </div>
+                <div class="gauge guilt-gauge">
+                    <span class="label">الذنب</span>
+                    <div class="bar" id="guilt-level">0.00</div>
+                </div>
+                <div class="gauge joy-gauge">
+                    <span class="label">الفرح</span>
+                    <div class="bar" id="joy-level">0.00</div>
+                </div>
+                <div class="gauge fear-gauge">
+                    <span class="label">الخوف</span>
+                    <div class="bar" id="fear-level">0.00</div>
+                </div>
+            </div>
+
+            <div class="lambda-display">
+                <span class="lambda-label">عامل التوازن $\lambda$</span>
+                <span class="lambda-value" id="lambda-level">0.50</span>
+            </div>
+        </div>
+
+        <div class="chat-interface">
+            <div class="chat-box" id="chat-box">
+                <p class="ai initial-message">الروبوت: مرحباً أيها المستكشف. أنا أطلس، حارس أعماق المعلومات. كيف يمكنني إرشادك اليوم؟</p>
+                
+                <div class="typing-indicator" id="typing-indicator">
+                    <div class="dot dot1"></div>
+                    <div class="dot dot2"></div>
+                    <div class="dot dot3"></div>
+                </div>
+            </div>
+            
+            <div class="input-area">
+                <input type="text" id="user-input" placeholder="اكتب استفسارك...">
+                <button id="send-button">إرسال</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
