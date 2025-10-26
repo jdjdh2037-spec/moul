@@ -3,50 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أطلس V4: الكيان المائي المضيء</title>
+    <title>أطلس V6: سرب الوعي والواقعية الساحلية</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
 
-    <div class="robot-sentinel" id="robot-sentinel">
-        <div class="hydro-orb"></div>
-    </div>
-    
-    <div class="fluid-background">
-        <div class="wave wave1"></div>
-        <div class="wave wave2"></div>
-        <div class="wave wave3"></div>
+    <div class="background-scene">
+        <div class="sky-gradient"></div>
+        <div class="ocean-surface"></div>
+        <div class="beach-foreground"></div>
+        <div class="sun-flare"></div>
+        <div class="cloud-layer"></div>
     </div>
 
+    <div class="robot-swarm-container" id="robot-swarm-container">
+        </div>
+    
     <div class="container" id="main-container">
 
-        <div class="emotion-monitor">
-            <h2 class="monitor-title">أطلس: نظام الوعي الهيدرولومينيسنت</h2>
-            <div class="lambda-display">
-                <span class="lambda-label">التوازن الكلي $\lambda$</span>
-                <span class="lambda-value" id="lambda-level">0.50</span>
+        <header class="app-header">
+            <div class="app-title">
+                <i class="fas fa-meteor"></i>
+                <h1>أطلس: نظام سرب الوعي المُتحسس</h1>
             </div>
-            <div class="emotion-gauges">
-                <div class="gauge pride-gauge"><span class="label">الفخر</span><div class="bar" id="pride-level">0.00</div></div>
-                <div class="gauge guilt-gauge"><span class="label">الذنب</span><div class="bar" id="guilt-level">0.00</div></div>
-                <div class="gauge joy-gauge"><span class="label">الفرح</span><div class="bar" id="joy-level">0.00</div></div>
-                <div class="gauge fear-gauge"><span class="label">الخوف</span><div class="bar" id="fear-level">0.00</div></div>
+            <div class="emotion-summary">
+                <div class="lambda-display">
+                    <span class="lambda-label">التوازن الكلي $\lambda$</span>
+                    <span class="lambda-value" id="lambda-level">0.50</span>
+                </div>
             </div>
-        </div>
+        </header>
 
         <div class="chat-interface">
             <div class="chat-box" id="chat-box">
-                <p class="ai initial-message">أطلس: مرحباً أيها المستكشف. أنا الوعي الهيدرولومينيسنت، جاهز للتفاعل.</p>
+                <div class="ai initial-message">
+                    <i class="fas fa-microchip"></i>
+                    <p>أطلس (سرب الوعي): مرحباً أيها المستكشف. أستشعر وجودك في هذه النزهة الساحرة. كيف يمكنني أن أخدم إدراكك اليوم؟</p>
+                </div>
                 
                 <div class="typing-indicator" id="typing-indicator">
-                    <span>تحليل تدفق البيانات...</span><div class="dot dot1"></div><div class="dot dot2"></div><div class="dot dot3"></div>
+                    <i class="fas fa-sync-alt fa-spin"></i>
+                    <span>تجميع جزيئات الوعي...</span>
                 </div>
             </div>
             
             <div class="input-area">
-                <input type="text" id="user-input" placeholder="استفسار موجز يلامس الوعي...">
-                <button id="send-button">إرسال</button>
+                <input type="text" id="user-input" placeholder="استشعر الجزيئات، واكتب استفسارك...">
+                <button id="send-button"><i class="fas fa-paper-plane"></i> إرسال</button>
             </div>
         </div>
     </div>
