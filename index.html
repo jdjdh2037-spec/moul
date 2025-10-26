@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أطلس V5: الانغماس الرقمي على الشاطئ</title>
+    <title>أطلس V5.1: نظام الذكاء العاطفي المُجسَّد</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -17,21 +17,22 @@
 
     <div class="robot-sentinel" id="robot-sentinel">
         <div class="dynamic-core">
+            <i class="fas fa-robot robot-mood-icon" id="robot-mood-icon"></i>
             <div class="energy-pulsar"></div>
         </div>
-        <div class="status-gauge" id="robot-status">اتصال مستقر</div>
+        <div class="status-gauge" id="robot-status">وضع الاستعداد</div>
     </div>
     
     <div class="container" id="main-container">
 
         <header class="app-header">
             <div class="robot-identity">
-                <i class="fas fa-robot"></i>
-                <h1>أطلس: نظام الذكاء العاطفي المُجسَّد</h1>
+                <i class="fas fa-microchip"></i>
+                <h1>أطلس: نظام التحليل والتفاعل العاطفي المُجسَّد</h1>
             </div>
             <div class="emotion-monitor">
                 <div class="lambda-circle">
-                    <span class="lambda-label">التوازن الكلي</span>
+                    <span class="lambda-label">مؤشر التوازن</span>
                     <span class="lambda-value" id="lambda-level">0.50</span>
                 </div>
                 <div class="vital-signs">
@@ -42,22 +43,26 @@
                 </div>
             </div>
         </header>
-
+        
+        <div class="about-atlas">
+            <p><strong>أطلس</strong> هو محاكي الذكاء العاطفي (E-AI) المصمم لتقديم تحليلات دقيقة لحالة المشاعر وتأثيرها على سير الحوار. مهمتنا هي توفير استجابات وظيفية وواضحة، مع مراقبة أربعة أبعاد عاطفية رئيسية لضمان التفاعل الأمثل. <i class="fas fa-chart-line"></i></p>
+        </div>
+        
         <div class="chat-interface">
             <div class="chat-box" id="chat-box">
                 <div class="ai initial-message">
-                    <i class="fas fa-wave-square"></i>
-                    <p>أطلس: مرحباً أيها المستكشف. أنا أطلس، رفيقك في النزهة الساحلية. دعنا نبدأ التفاعل العاطفي.</p>
+                    <i class="fas fa-handshake"></i>
+                    <p>أطلس: أهلاً وسهلاً بك. أنا نظام الذكاء الاصطناعي أطلس، متاح لتحليل استفساراتك وتقديم استجابات متطورة وظيفياً.</p>
                 </div>
                 
                 <div class="typing-indicator" id="typing-indicator">
                     <i class="fas fa-ellipsis-h"></i>
-                    <span>أطلس يحلل الطيف العاطفي...</span>
+                    <span>أطلس يعالج البيانات العاطفية والوظيفية...</span>
                 </div>
             </div>
             
             <div class="input-area">
-                <input type="text" id="user-input" placeholder="اكتب استفسارك لبدء المحادثة المتطورة..." />
+                <input type="text" id="user-input" placeholder="اكتب استفسارك لبدء المحادثة الوظيفية..." />
                 <button id="send-button"><i class="fas fa-paper-plane"></i> إرسال</button>
             </div>
         </div>
