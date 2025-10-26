@@ -1,116 +1,74 @@
-# EmotionalState.py - تخزين الحالة والذاكرة
-
-import sqlite3
 import json
-import time
-from typing import Dict, Any
+from collections import deque
+from typing import Dict, Any, List
 
 class EmotionalState:
-    """تدير تخزين حالة الكائن العاطفية في قاعدة بيانات SQLite."""
+    """
+    يدير الحالة العاطفية والتاريخية والمفاهيم المعرفية للمستخدم.
+    * تم تعديله لاستخدام الذاكرة الداخلية بدلاً من SQLite ليتناسب مع بيئات Serverless (Netlify).
+    * إضافة: تخزين نواة السرد (Narrative Focus) والفجوة المعرفية (Cognitive Gap).
+    """
 
-    def __init__(self, db_path: str = 'emotions.db'):
-        """تهيئة الكلاس وتحميل الحالة الحالية من DB أو تهيئتها."""
-        self.db_path = db_path
-        self.initialize_db()
-        self.state = self.load_state()
+    BASE_EMOTIONS = {"guilt": 0.0, "fear": 0.0, "sadness": 0.0, "joy": 0.0, "anger": 0.0}
+    
+    def __init__(self, history_size: int = 5):
+        # الحالة العاطفية الحالية
+        self.current_state: Dict[str, float] = self.BASE_EMOTIONS.copy()
+        # سجل تاريخ آخر N من الحالات (لتحليل السياق)
+        self.history: deque[Dict[str, float]] = deque(maxlen=history_size)
+        
+        # الميزات الجديدة لتتبع السياق
+        self.narrative_focus: str = "غير محدد."  # لب المشكلة (مثل "الطرد من العمل")
+        self.cognitive_gap: float = 0.0          # قيمة التناقض المعرفي [0.0 - 1.0]
 
-        # القيم الافتراضية
-        initial_state = {
-            'temperament_bias': 0.5, # الانحياز المزاجي (ثابت عادة)
-            'maturity': 1.0,         # النضج (يزداد بمرور الوقت)
-            'joy': 0.5,
-            'fear': 0.0,
-            'calm': 0.5,
-            'anxiety': 0.0,
-            'pride': 0.0,
-            'guilt': 0.0,
-            # يمكن إضافة المزيد من المشاعر هنا
+    def to_dict(self) -> Dict[str, Any]:
+        """إرجاع حالة الوعي كقاموس كامل لحفظها أو نقلها."""
+        return {
+            "current_state": self.current_state,
+            "history": list(self.history),
+            "narrative_focus": self.narrative_focus,
+            "cognitive_gap": self.cognitive_gap
         }
-        
-        # تحميل الحالة أو استخدام الافتراضيات
-        if not self.state:
-            self.state = initial_state
-            self.save_state(self.state) # حفظ الحالة الأولية
 
-    def initialize_db(self):
-        """التطور 1: إنشاء قاعدة بيانات وتهيئة الجدول الرئيسي."""
-        conn = sqlite3.connect(self.db_path)
-        cursor = conn.cursor()
-        
-        # جدول 'state' لتخزين بيانات الحالة الرئيسية (قيمة واحدة لكل مفتاح)
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS state (
-                key TEXT PRIMARY KEY,
-                value TEXT
-            )
-        """)
-
-        # جدول 'log' لتسجيل التفاعلات (اختياري)
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS log (
-                id INTEGER PRIMARY KEY,
-                timestamp INTEGER,
-                data TEXT
-            )
-        """)
-        
-        conn.commit()
-        conn.close()
-
-    def load_state(self) -> Dict[str, float]:
-        """تحميل الحالة العاطفية من قاعدة بيانات SQLite."""
-        conn = sqlite3.connect(self.db_path)
-        cursor = conn.cursor()
-        
-        rows = cursor.execute("SELECT key, value FROM state").fetchall()
-        conn.close()
-        
-        state: Dict[str, float] = {}
-        if not rows:
-            return {}
-
-        for key, value_str in rows:
-            try:
-                # محاولة تحويل القيمة إلى Float
-                state[key] = float(value_str)
-            except ValueError:
-                # إذا لم يكن رقمًا، يمكن تخزينه كسلسلة أو تجاهله
-                state[key] = value_str # يجب أن تكون معظم قيمنا Float
-        
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> 'EmotionalState':
+        """إنشاء كائن من قاموس مُخزّن (مهم لإدارة الحالة في الـ API)."""
+        state = cls()
+        state.current_state = data.get("current_state", state.BASE_EMOTIONS.copy())
+        state.history = deque(data.get("history", []), maxlen=state.history.maxlen)
+        state.narrative_focus = data.get("narrative_focus", "غير محدد.")
+        state.cognitive_gap = data.get("cognitive_gap", 0.0)
         return state
 
-    def save_state(self, new_state: Dict[str, Any]):
-        """حفظ الحالة العاطفية في قاعدة بيانات SQLite."""
-        conn = sqlite3.connect(self.db_path)
-        cursor = conn.cursor()
+    def update_state(self, new_data: Dict[str, Any]):
+        """تحديث الحالة العاطفية والمعرفية معاً."""
         
-        for key, value in new_state.items():
-            # تحويل القيمة إلى سلسلة قبل الحفظ
-            value_str = str(value) 
+        # 1. تحديث التاريخ العاطفي
+        self.history.append(self.current_state.copy())
+        
+        # 2. تحديث المشاعر (متوسط مرجح 60/40 لصالح الإحساس الجديد)
+        new_emotions = new_data.get("emotions", {})
+        for emotion, value in new_emotions.items():
+            if emotion in self.current_state:
+                self.current_state[emotion] = (self.current_state[emotion] * 0.4) + (value * 0.6)
             
-            cursor.execute(
-                "INSERT OR REPLACE INTO state (key, value) VALUES (?, ?)",
-                (key, value_str)
-            )
-            
-        conn.commit()
-        conn.close()
+        # 3. تحديث البيانات المعرفية
+        if new_data.get("narrative_focus"):
+            self.narrative_focus = new_data["narrative_focus"]
+        self.cognitive_gap = max(0.0, min(1.0, new_data.get("cognitive_gap", self.cognitive_gap)))
 
-        # تحديث الحالة الداخلية
-        self.state.update(new_state)
-
-    def log_interaction(self, data: Dict[str, Any]):
-        """تسجيل تفاعل المستخدم في جدول log (اختياري)."""
-        conn = sqlite3.connect(self.db_path)
-        cursor = conn.cursor()
+    def get_emotional_history_summary(self) -> str:
+        """يُرجع ملخصاً لتغير المشاعر الرئيسية لـ PromptBuilder."""
+        if len(self.history) < 2:
+            return "التاريخ قصير، لا يمكن تحديد الاتجاه."
         
-        timestamp = int(time.time())
-        data_json = json.dumps(data)
+        latest = self.current_state
+        initial = self.history[0]
+        summary = ""
+        for emotion in ["guilt", "fear", "sadness"]:
+            diff = latest.get(emotion, 0.0) - initial.get(emotion, 0.0)
+            if abs(diff) > 0.15: 
+                trend = "تصاعد قوي" if diff > 0 else "تنازل ملحوظ"
+                summary += f"- {emotion}: {trend}.\n"
         
-        cursor.execute(
-            "INSERT INTO log (timestamp, data) VALUES (?, ?)",
-            (timestamp, data_json)
-        )
-        
-        conn.commit()
-        conn.close()
+        return summary if summary else "لا يوجد تغير عاطفي ملحوظ في المشاعر السلبية."
