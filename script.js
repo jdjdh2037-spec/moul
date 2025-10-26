@@ -1,6 +1,5 @@
 // **التعديل النهائي:** تم تعيين رابط API إلى خدمة Render المنشورة (مع إضافة المسار الصحيح).
 const API_ENDPOINT = "https://oo-4.onrender.com/api/ask"; 
-// تم تأكيد الرابط: https://oo-4.onrender.com/api/ask
 
 // العناصر التي نعتمد عليها في تحديث الواجهة
 const chatBox = document.getElementById('chat-box');
@@ -10,8 +9,6 @@ const sendButton = document.getElementById('send-button');
 
 /**
  * تحديث مستويات المشاعر و Lambda في لوحة القياس
- * @param {object} state - حالة المشاعر الجديدة (guilt, pride, fear, joy)
- * @param {number} lambda_val - قيمة الضمير Lambda الجديدة
  */
 function updateEmotionalDisplay(state, lambda_val) {
     document.getElementById('guilt-level').textContent = state.guilt.toFixed(2);
@@ -23,13 +20,10 @@ function updateEmotionalDisplay(state, lambda_val) {
 
 /**
  * عرض رسالة جديدة في صندوق الدردشة
- * @param {string} sender - نوع المرسل ('user', 'ai', 'error')
- * @param {string} message - نص الرسالة
  */
 function displayMessage(sender, message) {
     const msgElement = document.createElement('p');
     msgElement.className = sender;
-    // التأكد من أن الرسائل تُضاف قبل مؤشر الكتابة (Typing Indicator)
     msgElement.innerHTML = `${sender === 'user' ? 'أنت' : 'الروبوت'}: <span>${message}</span>`;
     chatBox.insertBefore(msgElement, typingIndicator); 
     chatBox.scrollTop = chatBox.scrollHeight;
@@ -55,7 +49,6 @@ async function sendMessage() {
         const response = await fetch(API_ENDPOINT, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            // تمرير الـ prompt فقط، بافتراض أن user_tone سيتم تعيينه افتراضياً في الخادم
             body: JSON.stringify({ prompt: prompt }) 
         });
 
@@ -92,4 +85,3 @@ userInput.addEventListener('keypress', function (e) {
 
 // تفعيل زر الإرسال بالنقر
 sendButton.addEventListener('click', sendMessage);
-
