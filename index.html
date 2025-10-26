@@ -3,120 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أطلس V32: المُطلق الكمومي</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <title>أطلس V5: الانغماس الرقمي على الشاطئ</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    
-    <div class="scanner-overlay" id="scanner-overlay">
-        <div class="scanner-line"></div>
-        <p>جاري المسح العاطفي للنص المدخل...</p>
+
+    <div class="ocean-view">
+        <div class="ocean-layer"></div>
+        <div class="wave-simulation"></div>
     </div>
 
-    <header class="clean-header">
-        <div class="logo-area">
-            <h1><i class="fas fa-microscope"></i> أطلس - المحلل الكمومي V32</h1>
-            <p>منصة **تحليل المشاعر العميقة** والتجاوب المائي.</p>
+    <div class="robot-sentinel" id="robot-sentinel">
+        <div class="dynamic-core">
+            <div class="energy-pulsar"></div>
         </div>
-        <div class="mission-statement">
-            <span class="lambda-label">التوازن الكمومي $\lambda$</span>
-            <span class="lambda-value" id="lambda-level">0.50</span>
-        </div>
-    </header>
+        <div class="status-gauge" id="robot-status">اتصال مستقر</div>
+    </div>
+    
+    <div class="container" id="main-container">
 
-    <div class="main-content-wrapper">
-        
-        <div class="emotion-monitor-floating">
-            <div class="vital-signs">
-                <div class="sign pride-sign">
-                    <div class="data-bubble" id="pride-bubble"><i class="fas fa-hand-fist"></i></div>
-                    <span class="label">الفخر</span><span class="value" id="pride-level">0.00</span>
+        <header class="app-header">
+            <div class="robot-identity">
+                <i class="fas fa-robot"></i>
+                <h1>أطلس: نظام الذكاء العاطفي المُجسَّد</h1>
+            </div>
+            <div class="emotion-monitor">
+                <div class="lambda-circle">
+                    <span class="lambda-label">التوازن الكلي</span>
+                    <span class="lambda-value" id="lambda-level">0.50</span>
                 </div>
-                <div class="sign guilt-sign">
-                    <div class="data-bubble" id="guilt-bubble"><i class="fas fa-mask"></i></div>
-                    <span class="label">الذنب</span><span class="value" id="guilt-level">0.00</span>
-                </div>
-                <div class="sign joy-sign">
-                    <div class="data-bubble" id="joy-bubble"><i class="fas fa-smile-beam"></i></div>
-                    <span class="label">الفرح</span><span class="value" id="joy-level">0.00</span>
-                </div>
-                <div class="sign fear-sign">
-                    <div class="data-bubble" id="fear-bubble"><i class="fas fa-bolt"></i></div>
-                    <span class="label">الخوف</span><span class="value" id="fear-level">0.00</span>
+                <div class="vital-signs">
+                    <div class="sign pride-sign"><span class="label">الفخر</span><span class="value" id="pride-level">0.00</span></div>
+                    <div class="sign guilt-sign"><span class="label">الذنب</span><span class="value" id="guilt-level">0.00</span></div>
+                    <div class="sign joy-sign"><span class="label">الفرح</span><span class="value" id="joy-level">0.00</span></div>
+                    <div class="sign fear-sign"><span class="label">الخوف</span><span class="value" id="fear-level">0.00</span></div>
                 </div>
             </div>
-        </div>
-        
-        <div class="container" id="main-container">
-            <div class="immersion-water-layer" id="immersion-water-layer"></div>
+        </header>
 
-            <div class="chat-interface">
-                <div class="chat-box" id="chat-box">
-                    <div class="ai initial-message">
-                        <i class="fas fa-microscope"></i>
-                        <p>أطلس V32: نظام المُطلق الكمومي نشط. الروبوت يراقب لزوجة المشاعر من الخارج.</p>
-                    </div>
-                    
-                    <div class="typing-indicator" id="typing-indicator">
-                        <div class="data-matrix-analyzer">
-                            <div class="data-line"></div>
-                            <div class="data-line delay-1"></div>
-                            <div class="data-line delay-2"></div>
-                        </div>
-                        <span>جاري تحليل المشاعر...</span>
-                    </div>
+        <div class="chat-interface">
+            <div class="chat-box" id="chat-box">
+                <div class="ai initial-message">
+                    <i class="fas fa-wave-square"></i>
+                    <p>أطلس: مرحباً أيها المستكشف. أنا أطلس، رفيقك في النزهة الساحلية. دعنا نبدأ التفاعل العاطفي.</p>
                 </div>
                 
-                <div class="input-area-panel input-glass-liquid">
-                    <div class="input-controls">
-                        <input type="text" id="user-input" placeholder="أدخل النص لتحليل حالتك العاطفية..." />
-                        <button id="send-button" class="polished-button">
-                            <div class="ripple-overlay"></div>
-                            <i class="fas fa-paper-plane"></i> تحليل
-                        </button>
-                    </div>
+                <div class="typing-indicator" id="typing-indicator">
+                    <i class="fas fa-ellipsis-h"></i>
+                    <span>أطلس يحلل الطيف العاطفي...</span>
                 </div>
             </div>
-        </div>
-        
-        <div class="cute-robot-sentinel-v31 fixed-analyzer-bot" id="robot-sentinel">
-            <div class="emotion-halo" id="emotion-halo"></div>
-            <div class="cute-bot-shell" id="bot-shell">
-                <div class="bot-head">
-                    <div class="bot-eye"></div>
-                    <div class="bot-antenna" id="nano-arm"></div>
-                </div>
-                <div class="bot-body">
-                    <i class="fas fa-heart-pulse"></i>
-                </div>
+            
+            <div class="input-area">
+                <input type="text" id="user-input" placeholder="اكتب استفسارك لبدء المحادثة المتطورة..." />
+                <button id="send-button"><i class="fas fa-paper-plane"></i> إرسال</button>
             </div>
         </div>
-        
     </div>
-    
-    <div class="fixed-background-layers">
-        <div class="ocean-masterpiece">
-            <div class="sunset-sky"></div>
-            <div class="water-reflection"></div>
-        </div>
-        <div class="hydro-illusion-wave-container">
-            <div class="scroll-ripple-overlay" id="scroll-ripple-overlay"></div> 
-            <div class="wave-layer wave-back" id="compound-wave-1"></div>
-            <div class="wave-layer wave-front" id="compound-wave-2"></div>
-            <div class="micro-bubble-stream"></div> 
-        </div>
-        <div class="answer-glare-overlay" id="answer-glare-overlay"></div>
-    </div>
-
-    <footer class="clean-footer">
-        <div class="footer-content">
-            <p><strong>أطلس V32 | نظام المُطلق الكمومي</strong></p>
-            <p>مُطوَّر ومُدرَّب بواسطة: <span class="developer-name"><i class="fas fa-code-branch"></i> مجدول شعلان الحيالي</span></p>
-            <p>&copy; 2025. جميع الحقوق محفوظة للبيانات المدققة.</p>
-        </div>
-    </footer>
 
     <script src="script.js"></script>
 </body>
