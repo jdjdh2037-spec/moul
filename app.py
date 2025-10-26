@@ -1,67 +1,74 @@
-# app.py
-
-# نقطة الدخول الرئيسية لتطبيق FastAPI
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-import os
+from pydantic import BaseModel
+from typing import Dict, Optional, Any
 
-# استخدام الاستيراد المطلق لضمان عمله في بيئات النشر
-from EmotionalProcessorV4 import EmotionalEngine
+# استيراد الوحدات المطورة
+from EmotionalProcessorV4 import EmotionalProcessorV4
 from EmotionalState import EmotionalState
 from PromptBuilder import PromptBuilder
+from CoreLLM import generate_llm_response # تم تصحيح الاستدعاء
 
-# تهيئة Firebase (هذه الخطوة غير ضرورية حاليًا ما دمنا نستخدم SQLite محليًا، لكنها خطوة جيدة)
-# سنقوم بالتهيئة الأساسية هنا، لكن التطبيق يعتمد على SQLite حاليًا
-# app = initialize_firebase_app() 
+# --- تهيئة المكونات (يتم تحميل النموذج مرة واحدة عند بدء التطبيق) ---
+app = FastAPI(title="Cognitive Emotional AI", version="2.0.0")
 
-# تهيئة محرك العواطف (يستخدم حالة عاطفية محددة)
-state_manager = EmotionalState()
-# هنا يتم تهيئة EmotionalEngine، حيث يتم تمرير state_manager إليه
-# ويتم تهيئة LLM client بداخله بشكل آمن
-engine = EmotionalEngine(state_manager=state_manager)
+# تهيئة المعالجات
+processor = EmotionalProcessorV4()
+builder = PromptBuilder()
 
-app = FastAPI(
-    title="Emotional Chat API",
-    description="API for the emotionally aware chat companion.",
-    version="1.0.0"
-)
+# مخزن لحالات المستخدمين (يجب استبداله بقاعدة بيانات في الإنتاج)
+user_states: Dict[str, EmotionalState] = {}
 
-# تفعيل CORS للسماح بالوصول من أي مصدر (مهم للتطبيقات الـ Frontend)
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"], # يسمح لأي نطاق بالوصول
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# نموذج البيانات لطلب الدردشة
+class ChatRequest(BaseModel):
+    user_id: str
+    user_prompt: str
+    current_state: Optional[Dict[str, Any]] = None
+
+# نموذج البيانات للاستجابة
+class ChatResponse(BaseModel):
+    response_text: str
+    new_state: Dict[str, Any]
 
 @app.get("/")
-def read_root():
-    """ نقطة وصول أساسية للتحقق من أن الـ API يعمل. """
-    return {"status": "Operational", "message": "Emotional Chat API is running."}
+def home():
+    """للتحقق من أن الـ API قيد التشغيل."""
+    return {"status": "ok", "message": "Cognitive Emotional AI V2.0 is running."}
 
-@app.post("/chat")
-def chat_endpoint(user_prompt: str):
-    """ نقطة وصول لمعالجة طلبات الدردشة مع المستخدم. """
+@app.post("/chat", response_model=ChatResponse)
+async def process_chat(request: ChatRequest):
+    """المعالجة الرئيسية للدردشة."""
+    
+    # 1. إدارة الحالة (استرداد الحالة القديمة أو إنشاء حالة جديدة)
+    if request.user_id not in user_states:
+        state_manager = EmotionalState()
+    elif request.current_state:
+        state_manager = EmotionalState.from_dict(request.current_state)
+    else:
+        state_manager = user_states.get(request.user_id, EmotionalState()) # استخدام get لمنع الخطأ إذا لم يكن ID موجود
+
     try:
-        # معالجة الطلب عبر محرك العواطف
-        response_text, state_update = engine.process_message(user_prompt)
+        # 2. تحليل المشاعر والمقاييس المعرفية
+        processing_results = processor.process_text(request.user_prompt)
         
-        return {
-            "response": response_text,
-            "current_state": state_update
-        }
+        # 3. تحديث الحالة العاطفية والمعرفية (يتم حفظ التاريخ والنواة هنا)
+        state_manager.update_state(processing_results)
+        
+        # 4. بناء الأمر النهائي باستخدام الاستراتيجية الجديدة
+        final_prompt = builder.build_prompt(request.user_prompt, state_manager)
+        
+        # 5. توليد الرد
+        llm_response = generate_llm_response(final_prompt)
+        
+        # 6. حفظ الحالة
+        user_states[request.user_id] = state_manager
+
+        return ChatResponse(
+            response_text=llm_response,
+            new_state=state_manager.to_dict()
+        )
+
     except Exception as e:
-        # معالجة الأخطاء وإرسال رسالة خطأ واضحة
-        return {"response": f"An error occurred: {str(e)}", "current_state": "Error"}
-
-@app.get("/state")
-def get_state():
-    """ نقطة وصول للحصول على الحالة العاطفية الحالية. """
-    return engine.get_current_state()
-
-# @app.post("/reset")
-# def reset_state_endpoint():
-#     """ نقطة وصول لإعادة تعيين حالة العواطف (اختياري). """
-#     # يمكن إضافة منطق إعادة تعيين الحالة هنا
-#     return {"status": "State reset placeholder"}
+        return ChatResponse(
+            response_text=f"خطأ: فشل في معالجة النموذج. {e}",
+            new_state=state_manager.to_dict()
+        )
