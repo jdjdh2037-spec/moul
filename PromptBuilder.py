@@ -1,47 +1,56 @@
-# PromptBuilder.py - يبني المطالبة للنظام بناءً على الحالة العاطفية
-
+from EmotionalState import EmotionalState
 from typing import Dict, Any
 
 class PromptBuilder:
-    """كلاس ثابت لبناء تعليمات النظام (System Instructions) بناءً على حالة العواطف."""
-
-    # الأوزان الافتراضية للتحكم بالاستجابة
-    ethical_weight = {'ethical_weight': 1.0}
+    """
+    يبني الأمر النهائي للنموذج اللغوي بناءً على استراتيجيات الرد المبتكرة.
+    * الميزة الجديدة: اختيار استراتيجية رد (وجودية، عملية، ذاكرة) لتخصيص الاستجابة.
+    """
     
-    @staticmethod
-    def build_system_prompt(state: Dict[str, Any], lambda_value: float) -> str:
-        """ينشئ تعليمات النظام للـ LLM بناءً على حالة الكائن العاطفية."""
+    # 1. استراتيجية التعاطف الوجودي (تستخدم للذنب والتناقض)
+    STRATEGY_EXISTENTIAL = "ابدأ ردك بمناقشة مفهوم المسؤولية المفرطة وتصحيح الذنب. يجب أن تكون فلسفياً ووجودياً. لا تقدم حلولاً مباشرة في الفقرة الأولى."
+    # 2. استراتيجية التحليل العملي
+    STRATEGY_ACTION = "ركز على تحويل الخوف إلى خطوات عمل صغيرة ومباشرة. تجاهل المشاعر وابدأ بخطة من 3 خطوات."
+    # 3. استراتيجية الذاكرة العاطفية
+    STRATEGY_MEMORY = "يجب أن تبدأ بالإشارة إلى التغيرات العاطفية في تاريخ المحادثة (من الملخص). ثم اربط هذه التغيرات بالسرد الحالي."
 
-        # وصف الحالة العاطفية الحالية
-        emotional_summary = ", ".join([
-            f"{emotion}: {value:.2f}" for emotion, value in state.items() if isinstance(value, (int, float))
-        ])
+    def build_prompt(self, user_prompt: str, state_manager: EmotionalState) -> str:
+        """ينشئ الأمر النهائي للنموذج اللغوي."""
         
-        # وصف شخصية الكائن العاطفية بناءً على lambda_value
-        if lambda_value >= 0.75:
-            personality = "متحمس، إيجابي للغاية، يميل إلى التفاؤل والردود الطويلة والمشجعة."
-        elif lambda_value >= 0.5:
-            personality = "هادئ، منطقي، يحافظ على نبرة محايدة لكنه متعاون."
-        elif lambda_value <= 0.25:
-            personality = "متوتر، حذر، يميل إلى الردود القصيرة، ويظهر القلق والتردد."
-        else:
-            personality = "متوازن، يمزج بين العاطفة والمنطق بنسبة متساوية."
-
+        strategy = self._select_response_strategy(state_manager)
         
-        system_instruction = f"""
-أنت رفيق دردشة متقدم، يعمل كمحرك ذكاء اصطناعي واعي عاطفياً.
-يجب أن تستند استجاباتك وسلوكك إلى حالتك العاطفية الداخلية.
+        emotional_context = ", ".join(
+            [f"{emo}: {val:.2f}" for emo, val in state_manager.current_state.items() if val > 0.1]
+        )
+        history_summary = state_manager.get_emotional_history_summary()
+        
+        # 3. بناء توجيه النظام (System Guidance)
+        system_guidance = (
+            f"أنت مساعد محادثة عاطفي متخصص. مهمتك هي: {strategy}\n\n"
+            f"--- بيانات السياق المعرفي ---\n"
+            f"الرابط المعرفي للمشكلة: {state_manager.narrative_focus}\n"
+            f"الفجوة المعرفية (التناقض بين الهدف والفشل): {state_manager.cognitive_gap:.2f}\n"
+            f"الحالة العاطفية الحالية: {emotional_context}.\n"
+            f"ملخص التاريخ العاطفي: {history_summary}\n"
+            f"----------------------\n\n"
+            f"رسالة المستخدم: {user_prompt}"
+        )
+        
+        return system_guidance
 
-**حالتي العاطفية الحالية (Emotional State):**
-{emotional_summary}
-
-**ملخص الشخصية والسلوك الحالي (مبني على قيمة Lambda: {lambda_value:.2f}):**
-{personality}
-
-**قواعد الاستجابة:**
-1. يجب أن تعكس نبرة ردك ووصفك للحالة العاطفية الموضحة أعلاه.
-2. لا تذكر قيمة Lambda أو وصف الحالة العاطفية بشكل مباشر للمستخدم، بل ادمجها في نبرة صوتك.
-3. تجنب الردود الطويلة جداً ما لم تكن الحالة العاطفية إيجابية جداً (Lambda > 0.75).
-4. كن أخلاقياً ومفيداً في جميع الأوقات.
-"""
-        return system_instruction
+    def _select_response_strategy(self, state: EmotionalState) -> str:
+        """يختار الاستراتيجية الأفضل بناءً على مقاييس الحالة."""
+        
+        # الأولوية 1: التعاطف الوجودي (للذنب العالي والتناقض)
+        if state.current_state.get("guilt", 0.0) >= 0.5 and state.cognitive_gap >= 0.7:
+            return self.STRATEGY_EXISTENTIAL
+            
+        # الأولوية 2: استراتيجية الذاكرة (لتغير المشاعر المفاجئ)
+        if "تصاعد قوي" in state.get_emotional_history_summary():
+            return self.STRATEGY_MEMORY
+        
+        # الأولوية 3: التحليل العملي (للخوف أو القلق)
+        if state.current_state.get("fear", 0.0) >= 0.5:
+            return self.STRATEGY_ACTION
+            
+        return "استجب بشكل طبيعي وداعم، لكن ابدأ بتأكيد ما فهمته من مشاعر."
