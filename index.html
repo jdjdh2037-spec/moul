@@ -3,28 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أطلس V28: الذبذبة العاطفية واللزوجة</title>
+    <title>أطلس V29: المحلل العاطفي الثابت</title>
     <link href="https://fonts.googleapis.com/css2?family=Aldrich&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-
-    <div class="robot-sentinel-v27 fab-robot-hidden" id="robot-sentinel">
-        <div class="emotion-halo" id="emotion-halo"></div> <div class="detailed-bot-shell" id="bot-shell">
-            <div class="nano-hologram-structure" id="nano-hologram-structure">
-                <div class="dotted-head"></div>
-                <div class="dotted-body"></div>
-                
-                <div class="nano-arm" id="nano-arm">
-                    <div class="arm-segment-1"></div>
-                    <div class="arm-segment-2"></div>
-                    <div class="nano-hand"><i class="fas fa-hand-paper"></i></div>
-                </div>
-            </div>
-        </div>
-        <div class="mental-state" id="mental-state">تحليل اللزوجة V28</div>
-    </div>
     
     <div class="scanner-overlay" id="scanner-overlay">
         <div class="scanner-line"></div>
@@ -33,11 +17,12 @@
 
     <header class="clean-header">
         <div class="logo-area">
-            <h1><i class="fas fa-water"></i> أطلس - الذبذبة العاطفية V28</h1>
+            <h1><i class="fas fa-microscope"></i> أطلس - المحلل العاطفي V29</h1>
             <p>منصة **تحليل المشاعر العميقة** والتجاوب المائي.</p>
         </div>
         <div class="mission-statement">
-            <p>الرؤية: الوضوح الكامل في حالة التراكب الكمومي.</p>
+            <span class="lambda-label">التوازن الكمومي $\lambda$</span>
+            <span class="lambda-value" id="lambda-level">0.50</span>
         </div>
     </header>
 
@@ -67,25 +52,11 @@
         <div class="container" id="main-container">
             <div class="immersion-water-layer" id="immersion-water-layer"></div>
 
-            <div class="top-info-bar">
-                <div class="hydro-gauge">
-                    <div class="hydro-icon-tank">
-                        <i class="fas fa-flask"></i> 
-                        <div class="liquid-fill" id="hydro-icon-fill"></div>
-                    </div>
-                    <div class="gauge-bar"><div class="gauge-fill" id="hydro-level"></div></div>
-                </div>
-                <div class="lambda-display">
-                    <span class="lambda-label">التوازن الكمومي $\lambda$</span>
-                    <span class="lambda-value" id="lambda-level">0.50</span>
-                </div>
-            </div>
-
             <div class="chat-interface">
                 <div class="chat-box" id="chat-box">
                     <div class="ai initial-message">
                         <i class="fas fa-microscope"></i>
-                        <p>أطلس V28: نظام الذبذبة العاطفية نشط. الروبوت يراقب لزوجة المشاعر. تفضل بإدخال البيانات.</p>
+                        <p>أطلس V29: المحلل العاطفي الثابت نشط. الروبوت الآن بجوار صندوق الإدخال لمراقبة اللزوجة العاطفية.</p>
                     </div>
                     
                     <div class="typing-indicator" id="typing-indicator">
@@ -94,16 +65,32 @@
                             <div class="data-line delay-1"></div>
                             <div class="data-line delay-2"></div>
                         </div>
-                        <span>جاري التحقق من الثبات التشغيلي...</span>
+                        <span>جاري تحليل المشاعر...</span>
                     </div>
                 </div>
                 
                 <div class="input-area-panel input-glass-liquid">
+                    
+                    <div class="robot-sentinel-v29 fixed-analyzer-bot" id="robot-sentinel">
+                        <div class="emotion-halo" id="emotion-halo"></div>
+                        <div class="detailed-bot-shell" id="bot-shell">
+                            <div class="nano-hologram-structure" id="nano-hologram-structure">
+                                <div class="dotted-head"></div>
+                                <div class="dotted-body"></div>
+                                <div class="nano-arm" id="nano-arm">
+                                    <div class="arm-segment-1"></div>
+                                    <div class="arm-segment-2"></div>
+                                    <div class="nano-hand"><i class="fas fa-heart-pulse"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div class="input-controls">
-                        <input type="text" id="user-input" placeholder="استفسار تحت الإشراف الهولوغرافي..." />
+                        <input type="text" id="user-input" placeholder="أدخل النص لتحليل حالتك العاطفية..." />
                         <button id="send-button" class="polished-button">
                             <div class="ripple-overlay"></div>
-                            <i class="fas fa-paper-plane"></i> إرسال
+                            <i class="fas fa-paper-plane"></i> تحليل
                         </button>
                     </div>
                 </div>
@@ -127,7 +114,7 @@
 
     <footer class="clean-footer">
         <div class="footer-content">
-            <p><strong>أطلس V28 | نظام الذبذبة العاطفية</strong></p>
+            <p><strong>أطلس V29 | نظام المحلل العاطفي الثابت</strong></p>
             <p>مُطوَّر ومُدرَّب بواسطة: <span class="developer-name"><i class="fas fa-code-branch"></i> مجدول شعلان الحيالي</span></p>
             <p>&copy; 2025. جميع الحقوق محفوظة للبيانات المدققة.</p>
         </div>
