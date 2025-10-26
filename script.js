@@ -1,10 +1,10 @@
-// **الكود المُطوَّر V30: المحلل الكمومي النظيف**
+// **الكود المُطوَّر V32: المُطلق الكمومي**
 
 // ===================================
-// إعدادات API (للمحاكاة)
+// إعدادات API (تم إزالة المحاكاة - العودة للاتصال الأصلي)
 // ===================================
 const GEMINI_API_KEY = "AIzaSyBG0zkPOSCtRF34QClhP2Kn8Xep8b5_iNU"; // مفتاح وهمي
-const SIMULATION_API_ENDPOINT = "https://oo-4.onrender.com/api/ask"; // نقطة نهاية وهمية
+const SIMULATION_API_ENDPOINT = "https://oo-4.onrender.com/api/ask"; // نقطة النهاية الوهمية/الحقيقية للمستخدم
 
 // ===================================
 // عناصر الواجهة الرئيسية
@@ -13,13 +13,13 @@ const chatBox = document.getElementById('chat-box');
 const userInput = document.getElementById('user-input');
 const sendButton = document.getElementById('send-button');
 const robotSentinel = document.getElementById('robot-sentinel'); 
-const nanoHologram = document.getElementById('nano-hologram-structure');
 const emotionHalo = document.getElementById('emotion-halo');
 const scannerOverlay = document.getElementById('scanner-overlay');
 const lambdaLevelDisplay = document.getElementById('lambda-level'); 
-const nanoArm = document.getElementById('nano-arm'); 
+const botAntenna = document.getElementById('nano-arm'); 
 const compoundWave1 = document.getElementById('compound-wave-1'); 
 const compoundWave2 = document.getElementById('compound-wave-2'); 
+const botShell = document.getElementById('bot-shell');
 
 // الألوان المحددة في CSS 
 const EMOTION_COLORS = {
@@ -51,29 +51,25 @@ function displayMessage(sender, message) {
 
 function setRobotThinking(isThinking) {
     const typingIndicator = document.getElementById('typing-indicator');
-    const hologram = document.querySelector('#robot-sentinel .nano-hologram-structure');
     
     if (isThinking) {
         typingIndicator.style.display = 'flex'; 
         robotSentinel.classList.add('thinking'); 
-        if (hologram) hologram.style.animation = 'flicker 0.05s infinite alternate';
-        if (nanoArm) nanoArm.style.animation = 'none';
+        if (botShell) botShell.style.animation = 'simple-bounce 0.8s infinite alternate';
+        if (botAntenna) botAntenna.style.animation = 'none';
     } else {
         typingIndicator.style.display = 'none';
         robotSentinel.classList.remove('thinking');
-        if (hologram) hologram.style.animation = 'flicker 0.15s infinite alternate';
+        if (botShell) botShell.style.animation = 'none';
         startGreetingAnimation();
     }
 }
 
 function startGreetingAnimation() {
-    if (nanoArm) {
-        nanoArm.style.animation = 'none'; 
-        nanoArm.offsetHeight; 
-        const nanoHandIcon = nanoArm.querySelector('.nano-hand i');
-        if (nanoHandIcon) nanoHandIcon.className = 'fas fa-heart-pulse'; 
-
-        nanoArm.style.animation = 'wave-greeting 2s infinite ease-in-out alternate';
+    if (botAntenna) {
+        botAntenna.style.animation = 'none'; 
+        botAntenna.offsetHeight; 
+        botAntenna.style.animation = 'wave-greeting 2s infinite ease-in-out alternate';
     }
 }
 
@@ -90,7 +86,7 @@ function updateMentalState(lambda_val) {
 }
 
 // ===================================
-// وظائف التحكم في المشاعر والتمثيل البصري (V30)
+// وظائف التحكم في المشاعر والتمثيل البصري (V32)
 // ===================================
 
 function updateEmotionVisuals(state) {
@@ -98,7 +94,6 @@ function updateEmotionVisuals(state) {
     const totalNegative = state.guilt + state.fear;
     const emotionalIntensity = totalPositive + totalNegative; 
     
-    // 1. هالة الروبوت الانفعالية (Halo)
     let haloColor = EMOTION_COLORS.calm;
     if (totalPositive > totalNegative) {
         haloColor = EMOTION_COLORS.joy;
@@ -109,23 +104,12 @@ function updateEmotionVisuals(state) {
     const shadowSize = Math.min(40, emotionalIntensity * 25); 
     emotionHalo.style.boxShadow = `0 0 ${shadowSize}px ${haloColor}, 0 0 ${shadowSize * 1.5}px ${haloColor} inset`;
     
-    // 2. تغير مادة الروبوت (اللزوجة)
-    if (totalNegative > totalPositive * 1.5) { 
-        nanoHologram.classList.add('viscosity-turbid');
-        nanoHologram.classList.remove('viscosity-clear');
-    } else {
-        nanoHologram.classList.add('viscosity-clear');
-        nanoHologram.classList.remove('viscosity-turbid');
-    }
-
-    // 3. اهتزاز الواجهة (اضطراب مائي) - تطبيق الكلاس على الـ body
     if (totalNegative > 1.0) { 
         document.body.classList.add('screen-disturb');
     } else {
         document.body.classList.remove('screen-disturb');
     }
 
-    // 4. تحديث الأمواج المركبة
     updateCompoundWave(state);
 }
 
@@ -153,7 +137,7 @@ function startScanner() {
 }
 
 // ===================================
-// وظيفة الإرسال الرئيسية (محاكاة AI)
+// وظيفة الإرسال الرئيسية (استعادة الاتصال الأصلي)
 // ===================================
 
 async function sendMessage() {
@@ -171,29 +155,41 @@ async function sendMessage() {
 
     try {
         
-        // **محاكاة الرد (بيانات AI صحيحة)**
-        const fakeResponseText = "تم تحليل النص. حالة المشاعر الداخلية للذكاء الاصطناعي تظهر اضطراباً في الأمواج الكمومية بسبب تناقض البيانات المدخلة. يرجى إعادة الصياغة للحصول على انسياب مائي كامل.";
+        // **العودة إلى الاتصال الحقيقي (المفترض) بنقطة النهاية**
+        const response = await fetch(SIMULATION_API_ENDPOINT, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ prompt: prompt, apiKey: GEMINI_API_KEY })
+        });
 
-        // **محاكاة بيانات القياسات المعقدة (للتجربة)**
-        const simulatedState = {
-            guilt: 0.8, 
-            pride: 0.1,
-            fear: 0.5, 
-            joy: 0.2
-        };
-        const simulatedLambda = 0.15; // قيمة منخفضة تدل على الاضطراب
+        if (!response.ok) {
+            throw new Error(`خطأ في نقطة النهاية: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        // **يجب أن ترجع نقطة النهاية البيانات بهذا التنسيق:**
+        // { responseText: "...", state: { guilt: 0.1, pride: 0.8, fear: 0.1, joy: 0.2 }, lambda: 0.5 }
+
+        const apiResponseText = data.responseText || "لم يتم تلقي رد نصي، جاري تحليل الحالة العاطفية فقط.";
+        const emotionalState = data.state || { guilt: 0.0, pride: 0.0, fear: 0.0, joy: 0.0 };
+        const lambdaValue = data.lambda !== undefined ? data.lambda : 0.50;
 
         // انتظار انتهاء المسح الضوئي قبل عرض الرد
         await new Promise(resolve => setTimeout(resolve, 1500)); 
         
-        displayMessage('ai', fakeResponseText);
+        displayMessage('ai', apiResponseText);
         
-        // تطبيق التحديثات المرئية الجديدة
-        updateEmotionVisuals(simulatedState); 
-        updateMentalState(simulatedLambda); 
+        updateEmotionVisuals(emotionalState); 
+        updateMentalState(lambdaValue); 
 
     } catch (error) {
-        displayMessage('error', `إخفاق مائي! فشل في إنشاء البيانات المدققة: ${error.message}`);
+        // إذا فشل الاتصال، يتم استخدام حالة افتراضية للرسالة المرئية
+        displayMessage('error', `إخفاق مائي! فشل في الاتصال بالشبكة: ${error.message}.`);
+        updateEmotionVisuals({ guilt: 0.5, pride: 0.0, fear: 0.5, joy: 0.0 });
+        updateMentalState(0.05); // حالة اضطراب
     } finally {
         userInput.disabled = false;
         sendButton.disabled = false;
@@ -217,11 +213,9 @@ document.addEventListener('DOMContentLoaded', () => {
     setRobotThinking(false); 
     startGreetingAnimation();
     
-    // تعيين حالة بصرية أولية هادئة
     updateEmotionVisuals({ guilt: 0, pride: 0, fear: 0, joy: 0 }); 
     updateMentalState(0.50);
 
-    // الروبوت مرئي وثابت دائماً (V30)
     robotSentinel.classList.remove('fab-robot-hidden'); 
     robotSentinel.classList.add('fab-robot-visible'); 
 });
