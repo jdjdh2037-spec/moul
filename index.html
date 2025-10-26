@@ -3,66 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>الروبوت "أطلس" - مركز التحكم البحري</title>
+    <title>أطلس V4: الكيان المائي المضيء</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <div class="background-waves">
+    <div class="robot-sentinel" id="robot-sentinel">
+        <div class="hydro-orb"></div>
+    </div>
+    
+    <div class="fluid-background">
         <div class="wave wave1"></div>
         <div class="wave wave2"></div>
         <div class="wave wave3"></div>
     </div>
-    
+
     <div class="container" id="main-container">
 
-        <div class="sentinel-monitor">
-            <h1 class="monitor-title">أطلس: نظام الوعي الذكي</h1>
-            
-            <div class="robot-sentinel" id="robot-sentinel">
-                <div class="robot-head"></div>
-                <div class="robot-body"></div>
-                <div class="robot-antenna"></div>
-            </div>
-
-            <div class="emotion-gauges">
-                <div class="gauge pride-gauge">
-                    <span class="label">الفخر</span>
-                    <div class="bar" id="pride-level">0.00</div>
-                </div>
-                <div class="gauge guilt-gauge">
-                    <span class="label">الذنب</span>
-                    <div class="bar" id="guilt-level">0.00</div>
-                </div>
-                <div class="gauge joy-gauge">
-                    <span class="label">الفرح</span>
-                    <div class="bar" id="joy-level">0.00</div>
-                </div>
-                <div class="gauge fear-gauge">
-                    <span class="label">الخوف</span>
-                    <div class="bar" id="fear-level">0.00</div>
-                </div>
-            </div>
-
+        <div class="emotion-monitor">
+            <h2 class="monitor-title">أطلس: نظام الوعي الهيدرولومينيسنت</h2>
             <div class="lambda-display">
-                <span class="lambda-label">عامل التوازن $\lambda$</span>
+                <span class="lambda-label">التوازن الكلي $\lambda$</span>
                 <span class="lambda-value" id="lambda-level">0.50</span>
+            </div>
+            <div class="emotion-gauges">
+                <div class="gauge pride-gauge"><span class="label">الفخر</span><div class="bar" id="pride-level">0.00</div></div>
+                <div class="gauge guilt-gauge"><span class="label">الذنب</span><div class="bar" id="guilt-level">0.00</div></div>
+                <div class="gauge joy-gauge"><span class="label">الفرح</span><div class="bar" id="joy-level">0.00</div></div>
+                <div class="gauge fear-gauge"><span class="label">الخوف</span><div class="bar" id="fear-level">0.00</div></div>
             </div>
         </div>
 
         <div class="chat-interface">
             <div class="chat-box" id="chat-box">
-                <p class="ai initial-message">الروبوت: مرحباً أيها المستكشف. أنا أطلس، حارس أعماق المعلومات. كيف يمكنني إرشادك اليوم؟</p>
+                <p class="ai initial-message">أطلس: مرحباً أيها المستكشف. أنا الوعي الهيدرولومينيسنت، جاهز للتفاعل.</p>
                 
                 <div class="typing-indicator" id="typing-indicator">
-                    <div class="dot dot1"></div>
-                    <div class="dot dot2"></div>
-                    <div class="dot dot3"></div>
+                    <span>تحليل تدفق البيانات...</span><div class="dot dot1"></div><div class="dot dot2"></div><div class="dot dot3"></div>
                 </div>
             </div>
             
             <div class="input-area">
-                <input type="text" id="user-input" placeholder="اكتب استفسارك...">
+                <input type="text" id="user-input" placeholder="استفسار موجز يلامس الوعي...">
                 <button id="send-button">إرسال</button>
             </div>
         </div>
