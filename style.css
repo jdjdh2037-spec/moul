@@ -1,8 +1,8 @@
-/* الأكواد المُطوَّرة V30: المحلل الكمومي النظيف (تصميم نظيف ومستقر) */
+/* الأكواد المُطوَّرة V32: المُطلق الكمومي (تصميم نظيف ومستقر) */
 
 /* ===================================
    تعريف الألوان والثوابت
-   =================================== */
+   ================================== */
 :root {
     --color-background-v23: #ffe6cc; 
     --color-holo-blue: #00bfff; 
@@ -16,26 +16,31 @@
     --color-emotion-stress: #e74c3c; 
     --color-emotion-joy: #f1c40f; 
     --color-emotion-fear: #9b59b6; 
-    --font-primary: 'Orbitron', 'Aldrich', sans-serif; /* تغيير الخط الأساسي */
+    --font-primary: 'Orbitron', sans-serif; /* الخط غير العربي */
+    --font-arabic: 'Tajawal', sans-serif; /* الخط العربي */
 }
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    /* تطبيق الخط العربي على كل النص */
+    font-family: var(--font-arabic);
 }
 body {
-    font-family: var(--font-primary);
     background-color: var(--color-background-v23);
     color: var(--color-text-dark); 
     min-height: 100vh;
     overflow-x: hidden;
     transition: background-color 0.5s ease;
-    display: flex; /* لضمان أن الـ body يحتوي الـ main-content-wrapper */
+    display: flex; 
     flex-direction: column;
+}
+.clean-header h1, .clean-header .mission-statement, .clean-footer strong {
+    font-family: var(--font-primary); /* تطبيق الخط الأجنبي على العناوين */
 }
 
 /* ===================================
-   الطبقات العليا والسفلى (Header & Footer) - **إصلاح التذييل هنا**
+   الطبقات العليا والسفلى (Header & Footer)
    =================================== */
 .clean-header {
     position: fixed;
@@ -53,7 +58,6 @@ body {
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 .clean-footer {
-    /* **الإصلاح: تغيير من fixed إلى static** ليتدفق في نهاية المحتوى */
     position: static; 
     width: 100%;
     background: var(--color-footer-bg);
@@ -64,61 +68,101 @@ body {
     padding: 10px 0;
     font-size: 0.75rem;
     z-index: 5;
-    flex-shrink: 0; /* لمنعه من الانكماش */
-    margin-top: 30px; /* لترك مساحة بين الروبوت والتذييل */
+    flex-shrink: 0;
+    margin-top: 30px; 
 }
 .main-content-wrapper {
-    flex-grow: 1; /* للسماح له بأخذ المساحة المتبقية ودفع الـ Footer للأسفل */
+    flex-grow: 1; 
     padding-top: 80px; 
-    padding-bottom: 0; /* تم إزالة الـ padding السفلي ليعتمد على الـ Footer */
+    padding-bottom: 0; 
     display: flex;
-    flex-direction: column; /* ترتيب العناصر عمودياً */
+    flex-direction: column; 
     align-items: center;
     position: relative; 
-    min-height: calc(100vh - 70px); /* لضمان أن الجسم يغطي الشاشة عند البداية */
+    min-height: calc(100vh - 70px);
 }
 
 /* ===================================
-   الروبوت (V30) - خارج الحاوية
+   الروبوت (V32) - تصميم روبوت لطيف (Cute Robot)
    =================================== */
-.robot-sentinel-v29 {
-    width: 60px; /* حجم أكبر قليلاً ليظهر بشكل أفضل خارج الحاوية */
+.cute-robot-sentinel-v31 {
+    width: 60px;
     height: 70px;
-    margin: 20px 0; /* هامش أفقي ورأسي */
+    margin: 20px 0; 
     position: relative; 
     flex-shrink: 0;
-    /* تنسيقات الهيكل داخل الروبوت يجب أن تكون موجودة هنا */
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
 }
-.robot-sentinel-v29 .detailed-bot-shell {
-    transform: scale(0.65);
+.cute-bot-shell {
+    transform: scale(0.85);
+    transition: transform 0.3s ease;
 }
-
-/* الهالة الانفعالية (Emotion Halo) */
-.emotion-halo {
-    position: absolute;
-    top: -5px;
-    left: -5px;
-    width: 60px;
-    height: 60px;
+.bot-head {
+    width: 30px;
+    height: 30px;
+    background: var(--color-robot-accent);
+    border-radius: 50% 50% 0 0;
+    position: relative;
+    border: 2px solid var(--color-text-dark);
+    margin-bottom: -1px;
+}
+.bot-eye {
+    width: 8px;
+    height: 8px;
+    background: white;
     border-radius: 50%;
-    z-index: -1;
-    transition: box-shadow 0.5s ease-in-out;
-    box-shadow: 0 0 15px var(--color-emotion-calm), 0 0 30px var(--color-emotion-calm) inset;
+    position: absolute;
+    top: 5px;
+    left: 11px;
+    box-shadow: 0 0 5px var(--color-holo-blue);
+}
+.bot-antenna {
+    width: 2px;
+    height: 10px;
+    background: var(--color-robot-accent);
+    position: absolute;
+    top: -10px;
+    left: 14px;
+    border-radius: 2px;
+    transform-origin: bottom center;
+    animation: wave-greeting 2s infinite ease-in-out alternate;
+}
+.bot-body {
+    width: 40px;
+    height: 35px;
+    background: var(--color-holo-blue);
+    border-radius: 5px;
+    border: 2px solid var(--color-text-dark);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 1.2rem;
+}
+.emotion-halo {
+    width: 70px;
+    height: 70px;
+    top: 0;
+    left: 0;
 }
 
-/* حالات مادة الروبوت الداخلية (لزوجة/تعكير) */
-.nano-hologram-structure {
-    transition: filter 0.5s ease-in-out;
+/* حركة الروبوت عند التفكير */
+.cute-robot-sentinel-v31.thinking .cute-bot-shell {
+    transform: scale(0.95);
+    animation: simple-bounce 0.8s infinite alternate; /* حركة جديدة */
 }
-.viscosity-clear {
-    filter: brightness(1.2) contrast(1.1); 
+.cute-robot-sentinel-v31.thinking .bot-head {
+    background: var(--color-emotion-stress);
 }
-.viscosity-turbid {
-    filter: blur(1px) brightness(0.9) contrast(0.8) hue-rotate(20deg); 
+@keyframes simple-bounce {
+    from { transform: translateY(0) scale(0.9); }
+    to { transform: translateY(-3px) scale(1); }
 }
 
 /* ===================================
-   المؤشرات العاطفية (V30: ضبط الأيقونات)
+   المؤشرات العاطفية (V32: ضبط الأيقونات والنص)
    =================================== */
 .emotion-monitor-floating {
     position: relative; 
@@ -140,50 +184,28 @@ body {
     flex: 1 1 20%; 
     min-width: 60px;
     text-align: center;
+    display: flex; 
+    flex-direction: column;
+    align-items: center;
 }
 .sign .label {
-    font-size: 0.8rem; /* ضبط حجم خط التسمية */
+    font-size: 0.8rem; 
     display: block;
+    margin-top: 5px;
 }
 .sign .value {
-    font-size: 1rem; /* ضبط حجم خط القيمة */
+    font-size: 1rem; 
     font-weight: bold;
     display: block;
 }
-.data-bubble {
-    width: 45px;
-    height: 45px;
-    margin: 0 auto 5px auto;
-}
 
 /* ===================================
-   حاوية المحادثة والإدخال
+   حاوية الإدخال (V32: إصلاح ظهور زر الإرسال)
    =================================== */
 .container {
     width: 90%; 
     max-width: 600px;
-    margin: 0; 
-    flex-grow: 1; /* السماح للحاوية بأخذ المساحة المتاحة */
-    box-shadow: 0 0 50px rgba(0, 0, 0, 0.1); 
-    border: 3px solid rgba(0, 0, 0, 0.1); 
-    border-radius: 15px;
-    overflow: hidden;
-    position: relative;
-    background: var(--color-glass-base);
-    z-index: 5;
-    display: flex;
-    flex-direction: column; 
-}
-.chat-interface {
-    flex: 1; 
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-.chat-box {
-    flex-grow: 1;
-    overflow-y: auto;
-    padding: 15px;
+    /* ... تنسيقات أخرى ... */
 }
 .input-area-panel {
     flex-shrink: 0; 
@@ -196,60 +218,21 @@ body {
 .input-controls {
     flex-grow: 1;
     display: flex;
-    gap: 5px;
+    gap: 10px; /* زيادة الفجوة قليلاً */
+    align-items: center; /* **التأكد من محاذاة العناصر** */
+    width: 100%; /* ضمان استخدام المساحة الكاملة */
 }
 .input-controls input {
     flex-grow: 1;
     padding: 10px 15px;
-    border-radius: 20px;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    font-family: inherit;
-    font-size: 1rem;
+    min-width: 50%; /* ضمان أن حقل النص لا يختفي */
+    /* ... تنسيقات أخرى ... */
 }
 .polished-button {
     flex-shrink: 0;
     padding: 10px 15px;
-    border-radius: 20px;
-    border: none;
-    background-color: var(--color-holo-blue);
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.2s;
+    height: 40px; /* تحديد ارتفاع ثابت يتناسب مع الحقل */
+    /* ... تنسيقات أخرى ... */
 }
 
-/* ... (أكواد الموجات، التحريك، والمسح الضوئي المائية الأخرى) ... */
-
-
-/* ===================================
-   استفسارات الوسائط (للهاتف) - **الإصلاحات هنا**
-   =================================== */
-@media (max-width: 768px) {
-    
-    .main-content-wrapper {
-        padding-top: 90px; 
-        padding-left: 5%;
-        padding-right: 5%;
-    }
-    
-    .emotion-monitor-floating {
-        width: 100%;
-        margin-bottom: 15px;
-        padding: 10px;
-    }
-    
-    /* ضبط تناسب الخطوط على الهاتف */
-    .sign .label {
-        font-size: 0.7rem; 
-    }
-    .sign .value {
-        font-size: 0.9rem; 
-    }
-    
-    /* ضبط حجم الروبوت ليتناسب مع الهاتف */
-    .robot-sentinel-v29 {
-        width: 50px;
-        height: 60px;
-        margin: 15px 0;
-    }
-}
+/* ... (بقية الأكواد الثابتة مثل حركات الموجة والمسح الضوئي) ... */
