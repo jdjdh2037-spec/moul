@@ -1,14 +1,17 @@
-// **التعديل النهائي:** تم تعيين رابط API
+// **الكود النهائي: الروبوت المتفاعل ونظام الخلل**
+
 const API_ENDPOINT = "https://oo-4.onrender.com/api/ask"; 
 
-// العناصر
+// العناصر الأساسية
 const chatBox = document.getElementById('chat-box');
 const userInput = document.getElementById('user-input');
 const typingIndicator = document.getElementById('typing-indicator');
 const sendButton = document.getElementById('send-button');
+const robotSentinel = document.getElementById('robot-sentinel');
+const container = document.querySelector('.container');
 
 // ===================================
-// وظائف واجهة المستخدم الأساسية (بدون تغيير وظيفي)
+// وظائف واجهة المستخدم الأساسية
 // ===================================
 
 function updateEmotionalDisplay(state, lambda_val) {
@@ -27,6 +30,45 @@ function displayMessage(sender, message) {
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
+// ===================================
+// وظائف الروبوت المتحرك والخلل (Glitch/Sentinel Interaction)
+// ===================================
+
+let sentinelOffset = 0; 
+let sentinelDirection = 1;
+
+// حركة اهتزاز ميكانيكية بسيطة
+function animateSentinel() {
+    sentinelOffset += sentinelDirection * 0.8;
+    if (sentinelOffset > 5 || sentinelOffset < -5) {
+        sentinelDirection *= -1;
+    }
+    // حركة اهتزاز بسيطة في المحور الرأسي
+    robotSentinel.style.transform = `translateY(${sentinelOffset}px)`;
+    requestAnimationFrame(animateSentinel);
+}
+animateSentinel(); 
+
+function setRobotThinking(isThinking) {
+    if (isThinking) {
+        robotSentinel.classList.add('thinking');
+    } else {
+        robotSentinel.classList.remove('thinking');
+    }
+}
+
+// تطبيق تأثير خلل سريع على الحاوية
+function applyGlitchEffect() {
+    container.style.transform = `translateX(${Math.random() * 5 - 2.5}px) translateY(${Math.random() * 5 - 2.5}px)`;
+    setTimeout(() => {
+        container.style.transform = 'none';
+    }, 100);
+}
+
+// ===================================
+// وظيفة الإرسال الرئيسية
+// ===================================
+
 async function sendMessage() {
     const prompt = userInput.value.trim();
     if (!prompt) return;
@@ -37,6 +79,9 @@ async function sendMessage() {
     userInput.disabled = true;
     sendButton.disabled = true;
     typingIndicator.style.display = 'flex';
+    
+    setRobotThinking(true); // الروبوت يفكر (لون مختلف)
+    applyGlitchEffect(); // تطبيق تأثير الخلل عند الإرسال
 
     try {
         const response = await fetch(API_ENDPOINT, {
@@ -55,12 +100,13 @@ async function sendMessage() {
         updateEmotionalDisplay(data.new_state, data.lambda_value);
 
     } catch (error) {
-        displayMessage('error', `حدث خطأ في الاتصال بالخدمة: ${error.message}`);
+        displayMessage('error', `خطأ في البروتوكول: ${error.message}`);
         console.error("Error communicating with API:", error);
     } finally {
         userInput.disabled = false;
         sendButton.disabled = false;
         typingIndicator.style.display = 'none';
+        setRobotThinking(false); // إنهاء وضع التفكير
     }
 }
 
@@ -71,76 +117,3 @@ userInput.addEventListener('keypress', function (e) {
     }
 });
 sendButton.addEventListener('click', sendMessage);
-
-
-// ===================================
-// تأثير الجسيمات الكونية (Particle Effect)
-// ===================================
-
-const canvas = document.getElementById('cosmic-canvas');
-const ctx = canvas.getContext('2d');
-let particles = [];
-const PARTICLE_COUNT = 150;
-
-// تعيين حجم القماش لملء الشاشة
-function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-}
-window.addEventListener('resize', resizeCanvas);
-resizeCanvas(); // التنفيذ الأولي
-
-// بناء كائن الجسيمات
-class Particle {
-    constructor() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 2 + 0.5; // حجم صغير
-        this.speedX = Math.random() * 0.3 - 0.15; // حركة بطيئة جداً أفقياً
-        this.speedY = Math.random() * 0.3 - 0.15; // حركة بطيئة جداً عمودياً
-        this.color = 'rgba(255, 255, 255, ' + Math.random() * 0.7 + 0.2 + ')'; // شفافة ومضيئة
-    }
-
-    // تحديث موضع الجسيم
-    update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
-
-        // إعادة تدوير الجسيمات إذا خرجت من الشاشة
-        if (this.x < 0 || this.x > canvas.width) this.x = Math.random() * canvas.width;
-        if (this.y < 0 || this.y > canvas.height) this.y = Math.random() * canvas.height;
-    }
-
-    // رسم الجسيم
-    draw() {
-        ctx.fillStyle = this.color;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
-    }
-}
-
-// إنشاء الجسيمات
-function initParticles() {
-    particles = [];
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
-        particles.push(new Particle());
-    }
-}
-
-// حلقة الرسوم المتحركة الرئيسية
-function animate() {
-    // محو الشاشة للحركة
-    ctx.fillStyle = 'rgba(10, 10, 26, 0.1)'; 
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    for (let i = 0; i < particles.length; i++) {
-        particles[i].update();
-        particles[i].draw();
-    }
-    requestAnimationFrame(animate);
-}
-
-// بدء تشغيل النظام
-initParticles();
-animate();
