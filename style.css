@@ -1,253 +1,333 @@
-/* style.css - براءة اختراع بصرية: شاشة نظام التشغيل المعيبة (Flickering OS) */
+/* الألوان الأساسية: عمق البحر والنيون */
+:root {
+    --color-deep-ocean: #000b1a; /* لون أساسي داكن */
+    --color-neon-blue: #00ffff; /* أزرق سماوي (الروبوت/النص) */
+    --color-aqua: #00aaff;
+    --color-success: #32cd32; /* نيون أخضر للفخر والفرح */
+    --color-alert: #ff4500; /* برتقالي/أحمر للذنب والخوف */
+    --font-mono: 'DSEG7 Classic', monospace; /* خط تقني (افترض وجوده أو استخدم خط بديل) */
+}
 
-/* @import لخطوط نظام التشغيل (Monospace) */
-@import url('https://fonts.googleapis.com/css2?family=Major+Mono+Display&family=Space+Mono:wght@400;700&display=swap');
-
-/* ==================================
-   البيئة الرئيسية (BODY) - الشاشة السوداء المعيبة
-   ================================== */
+/* التنسيقات العامة */
 body {
-    /* خلفية سوداء عميقة لتبدو كشاشة إيقاف تشغيل */
-    background-color: #0d0d0d; 
-    color: #e0e0e0;
-    font-family: 'Space Mono', monospace; /* خط نظام التشغيل */
+    background-color: var(--color-deep-ocean);
+    color: var(--color-neon-blue);
+    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    line-height: 1.6;
-    direction: rtl; 
-    text-align: right;
-    min-height: 100vh;
-    overflow-x: hidden;
+    overflow: hidden; /* لمنع ظهور شريط التمرير الناتج عن الأمواج */
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-top: 20px;
-    
-    /* فلتر الضوضاء (Noise Filter) - يُضاف عبر SVG في HTML */
-    filter: url(#noise-filter); 
-    
-    /* وميض الشاشة (Flicker Animation) - تأثير معقد */
-    animation: screen-flicker 10s infinite step-end;
+    min-height: 100vh;
+    direction: rtl;
 }
 
-/* الرسوم المتحركة للوميض الخفيف */
-@keyframes screen-flicker {
-    0%, 100% { opacity: 1; }
-    5% { opacity: 0.98; }
-    15% { opacity: 1; }
-    25% { opacity: 0.99; }
-    30% { opacity: 1; }
-    90% { opacity: 0.97; }
+/* ===================================
+   تأثير الأمواج المتحركة (الخلفية)
+   =================================== */
+.background-waves {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -1;
+    opacity: 0.3; /* أمواج هادئة في الخلفية */
 }
 
+.wave {
+    position: absolute;
+    bottom: 0;
+    width: 200%; 
+    height: 150px;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23001a33" fill-opacity="1" d="M0,96L60,106.7C120,117,240,139,360,128C480,117,600,75,720,74.7C840,75,960,117,1080,144C1200,171,1320,181,1380,186.7L1440,192L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path></svg>') repeat-x;
+    background-size: 50% 100%;
+    animation: wave-animation 30s linear infinite;
+}
+
+.wave1 {
+    opacity: 0.5;
+    animation-duration: 25s;
+    background-position-y: -10px;
+}
+
+.wave2 {
+    opacity: 0.8;
+    animation-duration: 20s;
+    animation-direction: reverse;
+    height: 120px;
+}
+
+.wave3 {
+    opacity: 1;
+    animation-duration: 35s;
+    height: 180px;
+}
+
+@keyframes wave-animation {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+/* ===================================
+   الحاوية الرئيسية و تأثير الخلل
+   =================================== */
 .container {
-    max-width: 1000px; 
-    width: 95%;
-    padding: 40px;
-    z-index: 10;
-    
-    /* أساس التصميم: الإكريليك المتكسر (Broken Acrylic) */
-    background: rgba(10, 10, 10, 0.7); /* خلفية شبه شفافة */
-    backdrop-filter: blur(8px); /* ضبابية بسيطة */
-    border: 2px solid #00ffff; /* إطار سماوي نيون */
-    border-radius: 5px;
-    
-    /* ظل نيون قوي يمتد ليعطي انطباعاً بالتوهج */
-    box-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff55, inset 0 0 10px #00ffff33;
-    
-    /* تأثير "الخلل" على الواجهة عند التفاعل */
-    transition: transform 0.1s linear;
-}
-.container:hover {
-    /* حركة اهتزاز طفيفة */
-    transform: translateX(1px) translateY(1px); 
+    display: flex;
+    width: 90%;
+    max-width: 1200px;
+    height: 80vh;
+    border: 3px solid var(--color-aqua);
+    box-shadow: 0 0 30px var(--color-aqua), inset 0 0 10px var(--color-aqua);
+    background-color: rgba(0, 11, 26, 0.8); /* شبه شفاف لعمق أكبر */
+    transition: transform 0.1s; /* للانتقال السلس لتأثير الخلل */
+    padding: 20px;
 }
 
-/* ==================================
-   الهيدر - إشارة النظام
-   ================================== */
-header {
-    background: none; 
-    color: #9370db;
-    margin-bottom: 50px;
-    border-bottom: 3px solid #ff00ff; /* خط ماجنتي متكسر */
-    padding-bottom: 20px;
+/* ===================================
+   1. لوحة المراقبة (الروبوت والعواطف)
+   =================================== */
+.sentinel-monitor {
+    flex: 1;
+    padding: 20px;
+    border-left: 1px solid rgba(0, 255, 255, 0.3);
+    text-align: center;
 }
 
-.logo {
-    font-family: 'Major Mono Display', monospace; 
-    font-size: 5.5em; 
-    color: #00ffff; 
-    text-shadow: 0 0 20px #00ffff, 0 0 30px #00ffff88;
-    /* تأثير التشوه (Glitch effect) */
-    animation: glitch-text 4s infinite linear alternate-reverse;
-}
-
-@keyframes glitch-text {
-    0% { text-shadow: 0.5px 0 0 red, -0.5px 0 0 blue; }
-    25% { text-shadow: -0.5px 0 0 cyan, 0.5px 0 0 yellow; }
-    50% { text-shadow: 0 0 0 #00ffff; }
-    75% { text-shadow: 1px 0 0 #ff00ff, -1px 0 0 #00ff00; }
-    100% { text-shadow: 0 0 0 #00ffff; }
-}
-
-h2 {
-    color: #ff00ff; /* ماجنتي نيون */
-    font-family: 'Major Mono Display', monospace;
-    border-bottom: 1px dashed #ff00ff55;
-    text-shadow: 0 0 5px #ff00ff;
+.monitor-title {
+    font-size: 1.5rem;
+    color: var(--color-neon-blue);
     margin-bottom: 30px;
-}
-.highlight {
-    color: #00ffff; 
-    text-shadow: 0 0 8px #00ffffaa;
-    /* خط تحت النص للتأكيد النيون */
-    border-bottom: 1px solid #00ffff;
+    text-shadow: 0 0 5px var(--color-neon-blue);
 }
 
-/* ==================================
-   المجسم المتحرك (The Sentinel Robot)
-   ================================== */
-#robot-sentinel {
-    position: absolute;
-    top: 50px;
-    left: 50px;
-    width: 80px;
-    height: 80px;
-    z-index: 50;
-    transition: all 0.3s ease-out;
+/* تصميم الروبوت (Sentinel) بأسلوب Flat Design مبتكر */
+.robot-sentinel {
+    width: 100px;
+    height: 120px;
+    margin: 30px auto;
+    position: relative;
+    border: 2px solid var(--color-neon-blue);
+    border-radius: 10px;
+    background-color: var(--color-deep-ocean);
+    box-shadow: 0 0 10px var(--color-neon-blue);
+    transition: box-shadow 0.3s;
 }
 
-.robot-core {
-    width: 30px;
-    height: 30px;
-    /* نواة مضيئة متكسرة */
-    background: #ff00ff;
-    border-radius: 0; /* تحويل الدائرة إلى مربع */
+.robot-head {
+    width: 60px;
+    height: 40px;
+    background-color: var(--color-neon-blue);
+    border-radius: 50% / 30%;
+    margin: 0 auto;
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(45deg); /* شكل ماسي */
-    box-shadow: 0 0 15px #ff00ff;
-    animation: core-glitch 2s infinite alternate;
-}
-
-.robot-eye {
-    width: 8px;
-    height: 8px;
-    background: #00ffff;
-    border-radius: 50%;
-    position: absolute;
-    top: 10px;
+    top: -20px;
     left: 50%;
     transform: translateX(-50%);
-    box-shadow: 0 0 5px #00ffff;
-    animation: eye-signal 1s infinite step-end;
+}
+.robot-head::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 40px;
+    height: 10px;
+    background-color: var(--color-deep-ocean); /* العين/الشاشة */
+    border-radius: 2px;
 }
 
-@keyframes core-glitch {
-    0%, 100% { box-shadow: 0 0 15px #ff00ff; }
-    50% { box-shadow: 0 0 25px #ff00ff, 0 0 5px #00ffff; }
+.robot-antenna {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    width: 2px;
+    height: 10px;
+    background-color: var(--color-neon-blue);
 }
 
-@keyframes eye-signal {
-    0%, 50% { opacity: 1; }
-    51%, 100% { opacity: 0.5; }
+.robot-sentinel.thinking {
+    box-shadow: 0 0 20px var(--color-success); /* وميض أخضر أثناء التفكير */
 }
 
-/* حالة التفكير (الخلل المتقطع) */
-.thinking .robot-core {
-    background: #ffff00;
-    box-shadow: 0 0 20px #ffff00;
-    /* إضافة تشويش موضعي */
-    filter: drop-shadow(0 0 5px #ff00ff);
+/* عدادات العواطف */
+.emotion-gauges {
+    margin-top: 50px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
 }
 
-/* ==================================
-   لوحة المشاعر - مقاييس التشغيل
-   ================================== */
-.emotion-card {
-    padding: 15px;
+.gauge {
+    padding: 5px;
+    border: 1px solid rgba(0, 255, 255, 0.2);
     border-radius: 5px;
-    text-align: center;
-    color: #fff;
-    /* إطار مزدوج */
-    border: 1px solid; 
-    box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.5) inset;
-    transition: all 0.2s ease-out;
+    font-size: 0.9rem;
+    text-align: right;
 }
 
-/* توهج النيون المشاعري */
-.guilt { border-color: #f44336; background-color: #5d0000; box-shadow: 0 0 15px #f44336; }
-.fear { border-color: #ff9800; background-color: #6a3e00; box-shadow: 0 0 15px #ff9800; }
-.pride { border-color: #4caf50; background-color: #1f4c21; box-shadow: 0 0 15px #4caf50; }
-.joy { border-color: #00bcd4; background-color: #004d40; box-shadow: 0 0 15px #00bcd4; }
-.lambda { border-color: #ff00ff; background-color: #4a148c; box-shadow: 0 0 20px #ff00ff; }
-
-.emotion-card p {
-    font-size: 2em;
-    font-family: 'Major Mono Display', monospace;
+.gauge .label {
+    display: block;
+    font-size: 0.8rem;
+    color: rgba(0, 255, 255, 0.7);
+    margin-bottom: 3px;
 }
 
-/* ==================================
-   منطقة الدردشة (Interconnection Panel)
-   ================================== */
+.gauge .bar {
+    height: 20px;
+    line-height: 20px;
+    background-color: var(--color-deep-ocean);
+    color: var(--color-neon-blue);
+    padding-right: 5px;
+    border-right: 3px solid;
+    transition: all 0.5s ease-out;
+}
+
+/* تمييز الألوان حسب العاطفة */
+.pride-gauge .bar, .joy-gauge .bar { border-color: var(--color-success); }
+.guilt-gauge .bar, .fear-gauge .bar { border-color: var(--color-alert); }
+
+/* عامل التوازن Lambda - تصميم بصري مميز */
+.lambda-display {
+    margin-top: 40px;
+    padding: 10px;
+    border: 1px dashed var(--color-aqua);
+    background-color: rgba(0, 255, 255, 0.05);
+}
+
+.lambda-label {
+    display: block;
+    font-size: 1rem;
+    color: var(--color-aqua);
+    margin-bottom: 5px;
+}
+.lambda-value {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--color-neon-blue);
+    text-shadow: 0 0 10px var(--color-neon-blue);
+}
+
+
+/* ===================================
+   2. منطقة الدردشة (لوحة الاتصال)
+   =================================== */
+.chat-interface {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    padding: 0 20px;
+}
+
 .chat-box {
-    /* شاشة عرض قديمة */
-    border: 3px solid #666;
-    background: #000000;
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.5); /* شفافية أكبر للتركيز على الخلفية */
+    border: 1px solid rgba(0, 255, 255, 0.1);
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.chat-box::-webkit-scrollbar {
+    width: 5px;
+}
+.chat-box::-webkit-scrollbar-thumb {
+    background: var(--color-aqua);
 }
 
 .chat-box p {
-    /* نص بنمط شاشة CRT */
-    font-family: 'Space Mono', monospace;
-    filter: drop-shadow(1px 1px 0 #00ffff);
-}
-
-.user {
-    color: #ffcc00; /* نص ذهبي */
-    border-left: 3px solid #ffcc00;
-}
-
-.ai {
-    color: #00ffff; /* نص سماوي */
-    border-right: 3px solid #00ffff;
-}
-
-/* زر الإرسال - نبضة الخلل (Glitch Pulse) */
-#send-button {
-    background: #ff00ff; 
-    border: 2px solid #ff00ff;
+    padding: 8px;
     border-radius: 5px;
-    box-shadow: 0 0 15px #ff00ff;
-    /* الرسوم المتحركة الخلل المتقطع */
-    animation: glitch-pulse 1s infinite alternate;
+    margin: 5px 0;
+    line-height: 1.6;
+    font-size: 1rem;
 }
 
-@keyframes glitch-pulse {
-    0% { transform: scale(1); box-shadow: 0 0 15px #ff00ff; }
-    50% { transform: scale(1.05) translateX(1px); box-shadow: 0 0 25px #ff00ff, 0 0 10px #00ffff; }
-    100% { transform: scale(1) translateX(-1px); }
+.chat-box .user {
+    text-align: right;
+    background-color: rgba(0, 160, 255, 0.2);
+    color: #fff;
+    border-right: 3px solid var(--color-aqua);
 }
 
-/* ==================================
-   استجابة الهاتف (Mobile Response)
-   ================================== */
-@media (max-width: 767px) {
-    .container {
-        padding: 10px;
-    }
-    .logo {
-        font-size: 2.5em;
-    }
-    #robot-sentinel {
-        width: 60px;
-        height: 60px;
-        left: 5px;
-        top: 5px;
-    }
-    .emotion-card {
-        flex-basis: 100%;
-        margin-bottom: 10px;
-    }
+.chat-box .ai {
+    text-align: left;
+    background-color: rgba(0, 255, 255, 0.1);
+    color: var(--color-neon-blue);
+    border-left: 3px solid var(--color-neon-blue);
+}
+
+.chat-box .error {
+    background-color: rgba(255, 0, 0, 0.2);
+    color: #ffcccc;
+    border-left: 3px solid #ff0000;
+}
+
+/* مؤشر الكتابة - فقاعات صاعدة (Bubbles) */
+.typing-indicator {
+    display: none;
+    align-items: center;
+    padding: 10px;
+    color: var(--color-aqua);
+}
+
+.typing-indicator .dot {
+    width: 8px;
+    height: 8px;
+    background-color: var(--color-aqua);
+    border-radius: 50%;
+    margin: 0 4px;
+    animation: bubble-up 1.5s infinite ease-in-out;
+}
+
+.typing-indicator .dot2 {
+    animation-delay: 0.5s;
+}
+
+.typing-indicator .dot3 {
+    animation-delay: 1s;
+}
+
+@keyframes bubble-up {
+    0%, 100% { transform: translateY(0) scale(1); opacity: 0.5; }
+    50% { transform: translateY(-5px) scale(1.2); opacity: 1; }
+}
+
+/* حقل الإدخال والأزرار */
+.input-area {
+    display: flex;
+    gap: 10px;
+}
+
+#user-input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid var(--color-aqua);
+    background-color: var(--color-deep-ocean);
+    color: var(--color-neon-blue);
+    font-size: 1rem;
+    box-shadow: inset 0 0 5px var(--color-aqua);
+}
+
+#send-button {
+    padding: 10px 20px;
+    border: 1px solid var(--color-neon-blue);
+    background-color: var(--color-aqua);
+    color: var(--color-deep-ocean);
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+#send-button:hover:not(:disabled) {
+    background-color: var(--color-neon-blue);
+    box-shadow: 0 0 10px var(--color-neon-blue);
+}
+
+#send-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
