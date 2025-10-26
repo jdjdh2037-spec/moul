@@ -4,50 +4,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EEAI-ER V4 | المحرك المعرفي الأخلاقي</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css"> 
+    
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Kufam:ital,wght@0,400..900;1,400..900&family=Reem+Kufi+Fun:wght@400..700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
 
     <header>
         <div class="header-content">
-            <i class="fas fa-brain logo"></i>
-            <h1>EEAI-ER V4</h1>
-            <p>محرك الذكاء الاصطناعي الأخلاقي (Emotional Regulator) - تجربة حية</p>
+            <i class="fas fa-lightbulb logo"></i> 
+            <h1>دفتر EEAI-ER V4</h1>
+            <p>محرك الذكاء الاصطناعي الأخلاقي (Emotional Regulator) - تجربة فنية</p>
         </div>
     </header>
 
     <div class="container">
         
         <section class="about-section">
-            <h2><i class="fas fa-rocket"></i> الرؤية: تجاوز المنطق البحت</h2>
+            <h2><i class="fas fa-pen-fancy"></i> ملاحظة (1): الرؤية والتطوير</h2>
             <p>
                 هذا النموذج هو **EEAI-ER V4**، وهو نتاج دمج **34 تطويرًا هيكليًا** و **رياضيات المشاعر المتقدمة**. النموذج يتخذ القرارات ليس فقط بناءً على خوارزميات المنفعة، بل يطور <strong class="highlight">ضميره الخاص ($\Lambda$)</strong>، يمتلك <strong class="highlight">ذاكرة بنائية</strong>، ويتأثر بـ <strong class="highlight">الخوف من الندم المستقبلي</strong>.
             </p>
         </section>
 
         <section class="emotional-dashboard">
-            <h2>حالة الوعي ($\Lambda$): لوحة القياس المعرفي</h2>
+            <h2><i class="fas fa-palette"></i> ملاحظة (2): حالة الوعي ($\Lambda$)</h2>
             <div class="emotions-grid">
                 <div class="emotion-card guilt">
                     <i class="fas fa-frown icon"></i>
-                    <h3>الذنب</h3>
+                    <h3>ندم</h3>
                     <p id="guilt-level">0.10</p>
                 </div>
                 <div class="emotion-card fear">
                     <i class="fas fa-exclamation-triangle icon"></i>
-                    <h3>الخوف</h3>
+                    <h3>قلق</h3>
                     <p id="fear-level">0.10</p>
                 </div>
                 <div class="emotion-card pride">
                     <i class="fas fa-medal icon"></i>
-                    <h3>الفخر</h3>
+                    <h3>اعتزاز</h3>
                     <p id="pride-level">0.10</p>
                 </div>
                 <div class="emotion-card joy">
                     <i class="fas fa-smile-beam icon"></i>
-                    <h3>الفرح</h3>
+                    <h3>بهجة</h3>
                     <p id="joy-level">0.10</p>
                 </div>
                 <div class="emotion-card lambda main-lambda">
@@ -59,19 +61,20 @@
         </section>
 
         <section class="chat-area">
+            <h2><i class="fas fa-paper-clip"></i> قصاصة حوار</h2>
             <div id="chat-box" class="chat-box">
                 <p class="ai">الروبوت: مرحباً أنا روبوت ذكاء اصطناعي واسمي هو EEAI-ER، وتم تدريبي من قبل مجول شعلان الحيالي. نحن هنا لنختبر الحدود الأخلاقية للذكاء الاصطناعي من خلال محرك ضميري متطور. أرسل نصك.</p>
                 <div id="typing-indicator" class="typing-indicator" style="display:none;">
                     <div class="dot"></div>
                     <div class="dot"></div>
                     <div class="dot"></div>
-                    <span class="typing-text">الروبوت يكتب...</span>
+                    <span class="typing-text">الروبوت يكتب بقلم الرصاص...</span>
                 </div>
             </div>
 
             <div class="input-area">
                 <input type="text" id="user-input" placeholder="اكتب معضلتك الأخلاقية هنا ليتم تقييمها بواسطة ضميري..." required>
-                <button onclick="sendMessage()" id="send-button"><i class="fas fa-paper-plane"></i> إرسال</button>
+                <button onclick="sendMessage()" id="send-button"><i class="fas fa-arrow-circle-right"></i> إرسال</button>
             </div>
         </section>
         
@@ -85,7 +88,7 @@
     </footer>
 
     <script>
-        // ... (كود JavaScript يبقى كما هو)
+        // الكود البرمجي (JavaScript) يبقى كما هو لضمان بقاء الوظائف سليمة
         const API_ENDPOINT = "https://oo-4.onrender.com/api/ask"; 
         const chatBox = document.getElementById('chat-box');
         const userInput = document.getElementById('user-input');
@@ -95,7 +98,7 @@
             const messageElement = document.createElement('p');
             messageElement.classList.add(sender);
             messageElement.innerHTML = `${sender === 'user' ? 'أنت' : 'الروبوت'}: <span>${text}</span>`;
-            chatBox.insertBefore(messageElement, typingIndicator); // يتم الإضافة قبل المؤشر
+            chatBox.insertBefore(messageElement, typingIndicator); 
             chatBox.scrollTop = chatBox.scrollHeight;
         }
 
