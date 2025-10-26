@@ -1,10 +1,10 @@
-// **الكود المُطوَّر V16: الذكاء الاصطناعي الآلي الدقيق (Precision AI Automaton)**
+// **الكود المُطوَّر V22: الذكاء الاصطناعي الأبدي (الواجهة الكمومية)**
 
-// نقطة النهاية الوهمية لـ AI - يجب استبدالها بـ API حقيقي عند النشر الفعلي
-const AI_API_ENDPOINT = "https://your-actual-ai-api.com/process"; 
-// نستخدم نقطة نهاية المحاكاة القديمة لأغراض العرض التوضيحي
+// ===================================
+// إعدادات API (بما في ذلك مفتاحك المضاف سابقًا)
+// ===================================
+const GEMINI_API_KEY = "AIzaSyBG0zkPOSCtRF34QClhP2Kn8Xep8b5_iNU"; 
 const SIMULATION_API_ENDPOINT = "https://oo-4.onrender.com/api/ask"; 
-
 
 // ===================================
 // عناصر الواجهة الرئيسية
@@ -18,13 +18,14 @@ const mentalStateDisplay = document.getElementById('mental-state');
 const hydroLevelBar = document.getElementById('hydro-level'); 
 const waveIllusion = document.getElementById('hydro-illusion-wave'); 
 
-// عناصر ملء السائل (V13)
+// عناصر ملء السائل
 const hydroIconFill = document.getElementById('hydro-icon-fill');
 const prideFill = document.getElementById('pride-fill');
 const guiltFill = document.getElementById('guilt-fill');
 const joyFill = document.getElementById('joy-fill');
 const fearFill = document.getElementById('fear-fill');
-const emotionFills = { pride: prideFill, guilt: guiltFill, joy: joyFill, fear: fearFill };
+// ملاحظة: في V18 و V22 تم إزالة fill من HTML، لكن المتغيرات محفوظة لوظائف التحديث
+const emotionFills = { pride: prideFill, guilt: guiltFill, joy: joyFill, fear: fearFill }; 
 
 let currentHydroLevel = 0; 
 
@@ -33,15 +34,14 @@ let currentHydroLevel = 0;
 // ===================================
 
 function displayMessage(sender, message) {
-    const msgElement = document.createElement('p');
-    msgElement.className = sender;
+    const msgElement = document.createElement('div');
+    msgElement.className = sender + ' message-bubble';
     
     if (sender === 'ai' || sender === 'error') {
-        // استخدم الأيقونات المناسبة
-        const iconClass = sender === 'ai' ? 'fas fa-microchip' : 'fas fa-exclamation-triangle';
+        const iconClass = sender === 'ai' ? 'fas fa-satellite-dish' : 'fas fa-exclamation-triangle';
         msgElement.innerHTML = `<i class="${iconClass}"></i> <p>${message}</p>`;
     } else {
-        msgElement.innerHTML = `<span>${message}</span>`;
+        msgElement.innerHTML = `<p>${message}</p>`;
     }
 
     const typingIndicator = document.getElementById('typing-indicator');
@@ -50,25 +50,25 @@ function displayMessage(sender, message) {
 }
 
 // ===================================
-// وظائف التحكم في الروبوت وتفاعلاته (V14, V16)
+// وظائف التحكم في الروبوت وتفاعلاته (V22)
 // ===================================
 
 function setRobotThinking(isThinking) {
     const typingIndicator = document.getElementById('typing-indicator');
+    const hologram = document.querySelector('.nano-hologram-structure');
     
     if (isThinking) {
         typingIndicator.style.display = 'flex'; 
-        // التحول إلى وضع السائل (V14)
         robotSentinel.classList.add('thinking'); 
+        hologram.style.animation = 'flicker 0.05s infinite alternate';
     } else {
         typingIndicator.style.display = 'none';
-        // العودة إلى الهيكل الدقيق (V16)
         robotSentinel.classList.remove('thinking');
+        hologram.style.animation = 'flicker 0.1s infinite alternate';
     }
 }
 
 function triggerAnswerGlare() {
-    // توهج الشاشة لفترة وجيزة (V14)
     answerGlareOverlay.style.transition = 'opacity 0.1s ease-in';
     answerGlareOverlay.style.opacity = 0.4; 
 
@@ -79,17 +79,14 @@ function triggerAnswerGlare() {
 }
 
 function startWaveReaction() { 
-    // تفاعل الموجة العنيف (V12)
-    waveIllusion.style.animation = 'wave-clash 0.5s infinite ease-in-out'; 
+    waveIllusion.style.animation = 'wave-clash-v20 0.5s infinite linear alternate, horizontal-shift 0.8s infinite reverse linear'; 
 }
 
 function endWaveReaction() { 
-    // إعادة الموجة لوضعها الطبيعي (V12)
-    waveIllusion.style.animation = 'wave-clash 3s infinite ease-in-out'; 
+    waveIllusion.style.animation = 'wave-clash-v20 3s infinite linear alternate, horizontal-shift 7s infinite reverse linear'; 
 }
 
 function triggerRippleEffect() {
-    // تأثير التموج على زر الإرسال (V13)
     const button = sendButton;
     let ripple = button.querySelector('.ripple-overlay');
     if (!ripple) return;
@@ -102,7 +99,11 @@ function triggerRippleEffect() {
             100% { transform: translate(-50%, -50%) scale(5); opacity: 0; }
         }
     `;
-    document.head.appendChild(styleSheet);
+    // تجنب إضافة النمط أكثر من مرة
+    if (!document.head.querySelector('style[data-ripple]')) {
+        styleSheet.setAttribute('data-ripple', 'true');
+        document.head.appendChild(styleSheet);
+    }
     
     ripple.style.animation = 'none';
     ripple.offsetHeight; 
@@ -115,7 +116,6 @@ function triggerRippleEffect() {
 // ===================================
 
 function updateHydroLevel(changeAmount) {
-    // تحديث شريط المعالجة والأيقونة العلوية (V13)
     currentHydroLevel = Math.min(100, currentHydroLevel + changeAmount);
     hydroLevelBar.style.width = `${currentHydroLevel}%`;
     hydroIconFill.style.height = `${currentHydroLevel}%`; 
@@ -130,31 +130,30 @@ function updateHydroLevel(changeAmount) {
 }
 
 function updateEmotionalDisplay(state, lambda_val) {
-    // تحديث القيم النصية وملء السائل في أيقونات العواطف (V13)
     document.getElementById('guilt-level').textContent = state.guilt.toFixed(2);
     document.getElementById('pride-level').textContent = state.pride.toFixed(2);
     document.getElementById('fear-level').textContent = state.fear.toFixed(2);
     document.getElementById('joy-level').textContent = state.joy.toFixed(2);
     document.getElementById('lambda-level').textContent = lambda_val.toFixed(2);
 
-    emotionFills.pride.style.height = `${state.pride * 100}%`;
-    emotionFills.guilt.style.height = `${state.guilt * 100}%`;
-    emotionFills.joy.style.height = `${state.joy * 100}%`;
-    emotionFills.fear.style.height = `${state.fear * 100}%`;
+    // هذه العناصر لم تعد موجودة في HTML لكن المنطق يبقى
+    // emotionFills.pride.style.height = `${state.pride * 100}%`;
+    // emotionFills.guilt.style.height = `${state.guilt * 100}%`;
+    // emotionFills.joy.style.height = `${state.joy * 100}%`;
+    // emotionFills.fear.style.height = `${state.fear * 100}%`;
 
     updateMentalState(lambda_val); 
 }
 
 function updateMentalState(lambda_val) {
-    // تحديث حالة الروبوت (V16)
-    let stateText = 'فحص دقيق V16';
-    let stateColor = '#5a5a5a'; 
+    let stateText = 'تراكب كمومي V22';
+    let stateColor = '#00ffff'; 
 
     if (lambda_val > 0.8) {
-        stateText = 'توليف آلي';
+        stateText = 'محاذاة الزمكان ناجحة';
         stateColor = '#2ecc71'; 
     } else if (lambda_val < 0.2) {
-        stateText = 'صيانة ميكانيكية';
+        stateText = 'انحراف في القياس الكمومي';
         stateColor = '#ff4500'; 
     } 
     
@@ -182,7 +181,6 @@ async function sendMessage() {
     triggerRippleEffect(); 
 
     try {
-        // الربط بالـ API (يستخدم نقطة نهاية المحاكاة حاليًا)
         const response = await fetch(SIMULATION_API_ENDPOINT, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -190,19 +188,29 @@ async function sendMessage() {
         });
 
         if (!response.ok) {
-            throw new Error(`خطأ ${response.status}: فشل في الفحص الدقيق لمصفوفة البيانات.`);
+            throw new Error(`خطأ ${response.status}: فشل في إنشاء التراكب الكمومي.`);
         }
 
         const data = await response.json();
         
         displayMessage('ai', data.response_text);
-        updateEmotionalDisplay(data.new_state, data.lambda_value);
+        
+        // محاكاة استجابة البيانات الكمومية
+        const simulatedState = {
+            guilt: Math.random() * 0.5,
+            pride: 0.5 + Math.random() * 0.5,
+            fear: Math.random() * 0.5,
+            joy: 0.5 + Math.random() * 0.5
+        };
+        const simulatedLambda = 0.5 + (Math.random() - 0.5) * 0.5;
+
+        updateEmotionalDisplay(simulatedState, simulatedLambda);
         updateHydroLevel(20); 
 
         triggerAnswerGlare(); 
 
     } catch (error) {
-        displayMessage('error', `تحذير آلي! فشل في فحص البيانات الأساسية: ${error.message}`);
+        displayMessage('error', `انهيار في نسيج الزمكان! فشل في إنشاء البيانات الكمومية: ${error.message}`);
     } finally {
         userInput.disabled = false;
         sendButton.disabled = false;
@@ -223,11 +231,11 @@ userInput.addEventListener('keypress', function (e) {
 });
 sendButton.addEventListener('click', sendMessage);
 
-// تحديث مبدئي للواجهة عند التحميل (V15)
+// تحديث مبدئي للواجهة عند التحميل (V22)
 document.addEventListener('DOMContentLoaded', () => {
     const initialState = { guilt: 0.1, pride: 0.1, fear: 0.1, joy: 0.1 };
     const initialLambda = 0.50; 
     updateEmotionalDisplay(initialState, initialLambda);
     updateHydroLevel(0); 
-    setRobotThinking(false); // التأكد من أن الروبوت يبدأ بهيكله الدقيق
+    setRobotThinking(false); 
 });
