@@ -1,4 +1,4 @@
-/* الأكواد المُطوَّرة V29: المحلل العاطفي الثابت (تصميم نظيف ومستقر) */
+/* الأكواد المُطوَّرة V30: المحلل الكمومي النظيف (تصميم نظيف ومستقر) */
 
 /* ===================================
    تعريف الألوان والثوابت
@@ -8,7 +8,7 @@
     --color-holo-blue: #00bfff; 
     --color-robot-accent: #ff4500; 
     --color-text-dark: #333333; 
-    --color-glass-base: rgba(255, 255, 255, 0.9); /* أكثر وضوحاً */
+    --color-glass-base: rgba(255, 255, 255, 0.9); 
     --color-immersion-water: rgba(135, 206, 250, 0.4);
     --color-footer-bg: rgba(255, 255, 255, 0.95);
     
@@ -16,7 +16,7 @@
     --color-emotion-stress: #e74c3c; 
     --color-emotion-joy: #f1c40f; 
     --color-emotion-fear: #9b59b6; 
-    --font-primary: 'Aldrich', sans-serif;
+    --font-primary: 'Orbitron', 'Aldrich', sans-serif; /* تغيير الخط الأساسي */
 }
 * {
     box-sizing: border-box;
@@ -30,22 +30,22 @@ body {
     min-height: 100vh;
     overflow-x: hidden;
     transition: background-color 0.5s ease;
+    display: flex; /* لضمان أن الـ body يحتوي الـ main-content-wrapper */
+    flex-direction: column;
 }
 
 /* ===================================
-   الطبقات العليا والسفلى (Header & Footer)
+   الطبقات العليا والسفلى (Header & Footer) - **إصلاح التذييل هنا**
    =================================== */
-.clean-header, .clean-footer {
+.clean-header {
     position: fixed;
     width: 100%;
     background: var(--color-footer-bg);
     backdrop-filter: blur(8px);
     z-index: 100;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-.clean-header {
     top: 0;
-    height: 70px; /* تقليل الارتفاع */
+    height: 70px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -53,43 +53,44 @@ body {
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 .clean-footer {
-    bottom: 0;
-    height: 50px; /* تقليل الارتفاع */
+    /* **الإصلاح: تغيير من fixed إلى static** ليتدفق في نهاية المحتوى */
+    position: static; 
+    width: 100%;
+    background: var(--color-footer-bg);
     border-top: 1px solid rgba(0, 0, 0, 0.1);
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 10px 0;
     font-size: 0.75rem;
+    z-index: 5;
+    flex-shrink: 0; /* لمنعه من الانكماش */
+    margin-top: 30px; /* لترك مساحة بين الروبوت والتذييل */
 }
 .main-content-wrapper {
-    padding-top: 80px; /* يتناسب مع ارتفاع الـ Header الجديد */
-    padding-bottom: 60px; /* يتناسب مع ارتفاع الـ Footer الجديد */
+    flex-grow: 1; /* للسماح له بأخذ المساحة المتبقية ودفع الـ Footer للأسفل */
+    padding-top: 80px; 
+    padding-bottom: 0; /* تم إزالة الـ padding السفلي ليعتمد على الـ Footer */
     display: flex;
-    justify-content: center; 
-    align-items: flex-start;
-    min-height: calc(100vh + 1px); /* يضمن شريط التمرير */
-    position: relative; 
-}
-.mission-statement {
-    display: flex;
+    flex-direction: column; /* ترتيب العناصر عمودياً */
     align-items: center;
-    gap: 10px;
+    position: relative; 
+    min-height: calc(100vh - 70px); /* لضمان أن الجسم يغطي الشاشة عند البداية */
 }
 
 /* ===================================
-   الروبوت (V29) - الثابت (داخل شريط الإدخال)
+   الروبوت (V30) - خارج الحاوية
    =================================== */
 .robot-sentinel-v29 {
-    width: 50px; 
-    height: 60px;
-    animation: none;
+    width: 60px; /* حجم أكبر قليلاً ليظهر بشكل أفضل خارج الحاوية */
+    height: 70px;
+    margin: 20px 0; /* هامش أفقي ورأسي */
     position: relative; 
     flex-shrink: 0;
-    margin-right: 10px;
+    /* تنسيقات الهيكل داخل الروبوت يجب أن تكون موجودة هنا */
 }
 .robot-sentinel-v29 .detailed-bot-shell {
     transform: scale(0.65);
-    /* تنسيقات الهيكل داخل الروبوت يجب أن تكون موجودة هنا أو في ملف CSS منفصل */
 }
 
 /* الهالة الانفعالية (Emotion Halo) */
@@ -117,12 +118,10 @@ body {
 }
 
 /* ===================================
-   المؤشرات العاطفية (V29: تصميم نظيف)
+   المؤشرات العاطفية (V30: ضبط الأيقونات)
    =================================== */
 .emotion-monitor-floating {
     position: relative; 
-    top: auto; 
-    right: auto;
     width: 90%; 
     max-width: 600px;
     margin-bottom: 20px;
@@ -142,6 +141,15 @@ body {
     min-width: 60px;
     text-align: center;
 }
+.sign .label {
+    font-size: 0.8rem; /* ضبط حجم خط التسمية */
+    display: block;
+}
+.sign .value {
+    font-size: 1rem; /* ضبط حجم خط القيمة */
+    font-weight: bold;
+    display: block;
+}
 .data-bubble {
     width: 45px;
     height: 45px;
@@ -149,13 +157,13 @@ body {
 }
 
 /* ===================================
-   حاوية المحادثة والإدخال (V29: الإصلاح النهائي للتواصل)
+   حاوية المحادثة والإدخال
    =================================== */
 .container {
     width: 90%; 
     max-width: 600px;
     margin: 0; 
-    height: 85vh; 
+    flex-grow: 1; /* السماح للحاوية بأخذ المساحة المتاحة */
     box-shadow: 0 0 50px rgba(0, 0, 0, 0.1); 
     border: 3px solid rgba(0, 0, 0, 0.1); 
     border-radius: 15px;
@@ -177,7 +185,6 @@ body {
     overflow-y: auto;
     padding: 15px;
 }
-/* تثبيت منطقة الإدخال في الأسفل */
 .input-area-panel {
     flex-shrink: 0; 
     padding: 10px;
@@ -185,7 +192,6 @@ body {
     border-top: 1px solid rgba(0, 0, 0, 0.1);
     display: flex; 
     align-items: center;
-    gap: 10px;
 }
 .input-controls {
     flex-grow: 1;
@@ -211,33 +217,39 @@ body {
     cursor: pointer;
     transition: background-color 0.2s;
 }
-/* ... (تنسيقات الموجات والمسح الضوئي كما هي) ... */
+
+/* ... (أكواد الموجات، التحريك، والمسح الضوئي المائية الأخرى) ... */
 
 
 /* ===================================
-   استفسارات الوسائط (للهاتف)
+   استفسارات الوسائط (للهاتف) - **الإصلاحات هنا**
    =================================== */
 @media (max-width: 768px) {
     
     .main-content-wrapper {
         padding-top: 90px; 
-        padding-bottom: 60px; 
-        display: block;
+        padding-left: 5%;
+        padding-right: 5%;
     }
     
     .emotion-monitor-floating {
         width: 100%;
         margin-bottom: 15px;
+        padding: 10px;
     }
     
-    .container {
-        width: 100%; 
-        height: 75vh; 
+    /* ضبط تناسب الخطوط على الهاتف */
+    .sign .label {
+        font-size: 0.7rem; 
+    }
+    .sign .value {
+        font-size: 0.9rem; 
     }
     
+    /* ضبط حجم الروبوت ليتناسب مع الهاتف */
     .robot-sentinel-v29 {
-        width: 40px;
-        height: 50px;
-        margin-right: 5px;
+        width: 50px;
+        height: 60px;
+        margin: 15px 0;
     }
 }
