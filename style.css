@@ -1,4 +1,4 @@
-/* الأكواد المُطوَّرة V25: المعايرة المتكاملة والثبات الهيكلي */
+/* الأكواد المُطوَّرة V28: الذبذبة العاطفية واللزوجة */
 
 /* ===================================
    تعريف الألوان والثوابت
@@ -10,16 +10,22 @@
     --color-sky-light: #fff5e6; 
     --color-water-reflection: rgba(255, 140, 0, 0.4); 
     
-    /* ألوان الواجهة والكمومية (تبقى باردة للتباين) */
+    /* ألوان الواجهة والكمومية */
     --color-holo-blue: #00bfff; 
     --color-robot-accent: #ff4500; 
     --color-text-dark: #333333; 
     
     --color-glass-base: rgba(255, 255, 255, 0.6); 
-    --color-immersion-water: rgba(255, 255, 255, 0.5); 
+    --color-immersion-water: rgba(135, 206, 250, 0.4); 
     --color-footer-bg: rgba(255, 255, 255, 0.8);
     
     --font-primary: 'Aldrich', sans-serif;
+
+    /* ألوان المشاعر (V28) */
+    --color-emotion-calm: #1abc9c; /* أخضر هادئ */
+    --color-emotion-stress: #e74c3c; /* أحمر ضاغط */
+    --color-emotion-joy: #f1c40f; /* أصفر للفرح */
+    --color-emotion-fear: #9b59b6; /* بنفسجي للخوف */
 }
 * {
     box-sizing: border-box;
@@ -32,6 +38,7 @@ body {
     color: var(--color-text-dark); 
     min-height: 100vh;
     overflow-x: hidden;
+    transition: background-color 0.5s ease;
 }
 
 /* ===================================
@@ -54,10 +61,6 @@ body {
     padding: 0 5%;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
-.clean-header .logo-area h1 {
-    color: var(--color-robot-accent);
-    text-shadow: none;
-}
 .clean-footer {
     bottom: 0;
     height: 60px;
@@ -65,13 +68,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    text-align: center;
 }
-.clean-footer .footer-content {
-    color: var(--color-text-dark);
-}
-
-/* حاوية المحتوى الرئيسية */
 .main-content-wrapper {
     padding-top: 100px; 
     padding-bottom: 70px; 
@@ -83,7 +80,7 @@ body {
 }
 
 /* ===================================
-   الخلفية (شروق الشمس)
+   الخلفية المائية وتأثيرات الأمواج
    =================================== */
 .fixed-background-layers {
     position: fixed;
@@ -94,160 +91,189 @@ body {
     z-index: -2;
     overflow: hidden;
 }
-.ocean-masterpiece {
-    position: absolute;
+.hydro-illusion-wave-container {
+    position: fixed;
+    bottom: 60px; 
     width: 100%;
-    height: 100%;
+    height: 300px;
+    z-index: 1;
+    overflow: hidden;
+    pointer-events: none;
 }
-.sunset-sky {
-    height: 100%;
-    background: linear-gradient(to top, var(--color-sky-dark) 0%, var(--color-sky-light) 100%);
-}
-.water-reflection {
+.wave-layer {
     position: absolute;
+    width: 200%;
+    height: 100%;
+    background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1000 100" xmlns="http://www.w3.org/2000/svg"><path fill="%23FFFFFF" fill-opacity="0.5" d="M0,30 C200,60 300,0 500,30 C700,60 800,0 1000,30 V100 H0 Z"/></svg>') repeat-x;
+    background-size: 50% 100px; /* الارتفاع الافتراضي (يتم تعديله بالـ JS) */
+    transition: background-size 0.5s ease;
+}
+.wave-back {
     bottom: 0;
-    width: 100%;
-    height: 50%;
-    background: radial-gradient(ellipse at center, var(--color-water-reflection) 0%, rgba(255, 255, 255, 0) 70%);
-    animation: pulse-reflection 10s infinite ease-in-out alternate;
+    animation: horizontal-shift 10s infinite reverse linear;
+    opacity: 0.7;
 }
-@keyframes pulse-reflection {
-    0% { transform: scale(1); opacity: 0.8; }
-    100% { transform: scale(1.05); opacity: 0.95; }
+.wave-front {
+    bottom: 5px;
+    animation: wave-clash-v20 3s infinite linear alternate, horizontal-shift 7s infinite reverse linear;
+    opacity: 0.9;
+    /* يتم التحكم بـ animation-duration من الـ JS لتمثيل التردد */
+}
+@keyframes horizontal-shift {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+}
+@keyframes wave-clash-v20 {
+    from { transform: scaleY(1); }
+    to { transform: scaleY(1.05); }
+}
+
+/* تأثير التموّج السريع عند التمرير */
+.scroll-ripple-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    background: transparent;
+    z-index: 5;
+    transition: transform 0.2s ease-out, opacity 0.2s ease-out;
+}
+.scroll-ripple-active {
+    transform: skewY(1deg); 
+    opacity: 0.1;
+    background: rgba(135, 206, 250, 0.5); 
 }
 
 /* ===================================
-   الروبوت المُفصَّل (V25) وحركة الطفو البطيئة
+   اضطراب الواجهة عند المشاعر السلبية القوية (V28)
    =================================== */
-.robot-sentinel-v23 {
-    position: absolute;
-    top: 50px; 
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80px; 
-    height: 100px;
-    margin-top: -100px; 
+@keyframes screen-shake {
+    0%, 100% { transform: translate(0, 0); }
+    25% { transform: translate(1px, -1px); }
+    50% { transform: translate(-1px, 1px); }
+    75% { transform: translate(1px, 1px); }
+}
+.screen-disturb body {
+    /* تطبيق الاهتزاز على الجسم بالكامل */
+    animation: screen-shake 0.1s infinite;
+    filter: brightness(0.95);
+}
+
+/* ===================================
+   الروبوت (V28) - الهالة واللزوجة
+   =================================== */
+.robot-sentinel-v27 {
+    position: fixed;
+    bottom: 80px; 
+    right: 20px;
+    width: 70px; 
+    height: 90px;
+    z-index: 90; 
     animation: nano-float 8s infinite ease-in-out alternate; 
-    z-index: 10;
-    perspective: 800px; 
+    transition: opacity 0.3s, transform 0.3s;
+    pointer-events: none; 
+}
+.fab-robot-hidden {
+    opacity: 0;
+    transform: translateY(20px) scale(0.9);
+    pointer-events: none;
+}
+.fab-robot-visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: all;
+}
+.robot-sentinel-v27 .mental-state {
+    display: none; 
 }
 @keyframes nano-float {
-    0% { transform: translate(-50%, 0px) rotate(0.1deg); }
-    50% { transform: translate(-50%, -5px) rotate(-0.1deg); }
-    100% { transform: translate(-50%, 0px) rotate(0.1deg); }
+    0% { transform: translateY(0px) rotate(0.1deg); }
+    50% { transform: translateY(-5px) rotate(-0.1deg); }
+    100% { transform: translateY(0px) rotate(0.1deg); }
 }
+
+/* الهالة الانفعالية (Emotion Halo) - V28 */
+.emotion-halo {
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    z-index: -1;
+    transition: box-shadow 0.5s ease-in-out;
+    /* التوهج الافتراضي (يتم تعديله بالـ JS) */
+    box-shadow: 0 0 15px var(--color-emotion-calm), 0 0 30px var(--color-emotion-calm) inset;
+}
+
+/* حالات مادة الروبوت الداخلية (لزوجة/تعكير) - V28 */
 .nano-hologram-structure {
+    /* ... (تنسيقات الهيكل هنا) ... */
     position: absolute;
     top: 50%;
     left: 50%;
     width: 70px; 
     height: 90px;
     transform: translate(-50%, -50%) rotateX(15deg) rotateY(15deg) scale(0.7); 
-    filter: drop-shadow(0 0 8px var(--color-holo-blue)) drop-shadow(0 0 8px var(--color-robot-accent)); 
-    animation: flicker 0.15s infinite alternate; 
+    transition: filter 0.5s ease-in-out;
 }
-.dotted-body::after {
-    background-image: radial-gradient(var(--color-robot-accent) 10%, transparent 10%); 
-    background-size: 6px 6px; 
+.viscosity-clear {
+    filter: brightness(1.2) contrast(1.1); /* أكثر سلاسة ووضوحاً */
 }
-.mental-state {
-    font-size: 0.6rem;
-    width: 120px;
-    left: -20px;
-    position: absolute;
-    bottom: 0;
-    text-align: center;
-    border-radius: 5px;
-    padding: 2px;
+.viscosity-turbid {
+    filter: blur(1px) brightness(0.9) contrast(0.8) hue-rotate(20deg); /* ضبابية وتعكير */
+}
+
+/* ===================================
+   شاشة المسح الضوئي (Scanner Overlay) - V28
+   =================================== */
+.scanner-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: none; 
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: var(--color-emotion-joy);
+    z-index: 1000;
+}
+.scanner-line {
+    width: 80%;
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--color-emotion-joy), transparent);
+    box-shadow: 0 0 10px var(--color-emotion-joy);
+    position: absolute; /* وضع الخط لتمكين الحركة العمودية */
+    top: 0;
+    left: 10%;
+    animation: scan-pulse 0.2s infinite alternate; 
+    transition: height 0.5s;
+}
+@keyframes scan-animate {
+    0% { top: 0; }
+    100% { top: calc(100% - 2px); } /* يصل إلى القاع */
+}
+@keyframes scan-pulse {
+    from { opacity: 0.8; }
+    to { opacity: 1; }
+}
+.scanner-active .scanner-line {
+    animation: scan-animate 1.5s linear 1 forwards, scan-pulse 0.2s infinite alternate; 
+    height: 5px; 
+}
+.scanner-overlay p {
+    margin-top: 20px;
+    font-size: 1.2rem;
     color: white;
 }
 
-/* ذراع الترحيب النانوية */
-.nano-arm {
-    position: absolute;
-    right: -10px;
-    top: 20px;
-    transform-origin: top left;
-    transform: rotate(30deg); 
-    transition: transform 0.5s ease-in-out;
-}
-.arm-segment-1, .arm-segment-2 {
-    border-radius: 2px;
-}
-.arm-segment-1 {
-    width: 5px;
-    height: 20px;
-    background-color: var(--color-holo-blue);
-    box-shadow: 0 0 5px var(--color-holo-blue);
-}
-.arm-segment-2 {
-    width: 4px;
-    height: 15px;
-    background-color: var(--color-robot-accent);
-    position: absolute;
-    top: 15px;
-    left: 1px;
-    transform-origin: top center;
-    transform: rotate(10deg);
-    box-shadow: 0 0 5px var(--color-robot-accent);
-}
-.nano-hand {
-    position: absolute;
-    top: 28px;
-    left: 0;
-    font-size: 10px;
-    color: var(--color-text-dark);
-}
-@keyframes wave-greeting {
-    0% { transform: rotate(0deg); }
-    50% { transform: rotate(-30deg); }
-    100% { transform: rotate(0deg); }
-}
-
 /* ===================================
-   المؤشرات العاطفية (V25 - تحسين التموضع)
-   =================================== */
-.emotion-monitor-floating {
-    position: absolute; 
-    top: 100px; 
-    right: calc(50% - 320px); 
-    z-index: 30; 
-    color: var(--color-text-dark); 
-    width: 100px; 
-    pointer-events: none;
-}
-.vital-signs {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-.sign {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: var(--color-footer-bg);
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    padding: 5px;
-    border-radius: 8px;
-    font-size: 0.8rem;
-}
-.data-bubble {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 5px;
-    color: var(--color-robot-accent);
-    box-shadow: 0 0 10px var(--color-holo-blue), 0 0 10px rgba(255, 255, 255, 0.5) inset;
-    background-color: rgba(255, 255, 255, 0.7);
-}
-
-
-/* ===================================
-   حاوية المحادثة والتحسينات الداخلية
+   حاوية المحادثة والماء
    =================================== */
 .container {
     width: 90%; 
@@ -262,25 +288,63 @@ body {
     background: var(--color-glass-base);
     z-index: 5;
 }
-.typing-indicator span {
-    border: 1px dashed rgba(52, 152, 219, 0.5);
-    padding: 3px 5px;
-    border-radius: 3px;
-    background: rgba(255, 255, 255, 0.3);
+.immersion-water-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-immersion-water); 
+    z-index: 1; 
+    pointer-events: none;
+}
+.chat-interface {
+    position: relative;
+    z-index: 2; 
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+.chat-box {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 15px;
 }
 
+/* ===================================
+   المؤشرات العاطفية (V27 - الفقاعة المائية)
+   =================================== */
+.emotion-monitor-floating {
+    position: absolute; 
+    top: 100px; 
+    right: calc(50% - 320px); 
+    z-index: 30; 
+    color: var(--color-text-dark); 
+    width: 100px; 
+    pointer-events: none;
+}
+.data-bubble {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 5px;
+    color: var(--color-robot-accent);
+    box-shadow: 0 0 15px rgba(0, 191, 255, 0.6) inset, 0 0 5px rgba(0, 0, 0, 0.2); 
+    background-color: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(2px);
+    transition: transform 0.1s ease, box-shadow 0.3s ease;
+}
+/* ... (بقية تنسيقات الرسائل والإدخال) ... */
 
 /* ===================================
-   استفسارات الوسائط (V25 - الإصلاح الحاسم)
+   استفسارات الوسائط (V27 - الإطار المتجاوب)
    =================================== */
 @media (max-width: 768px) {
     
-    .clean-header {
-        height: 100px; 
-        flex-direction: column;
-        justify-content: center;
-        text-align: center;
-    }
     .main-content-wrapper {
         display: block; 
         padding-top: 110px; 
@@ -288,23 +352,14 @@ body {
         padding-right: 5%;
     }
     
-    /* 1. الروبوت في المنتصف وأعلى */
-    .robot-sentinel-v23 {
-        position: relative; 
-        top: auto; 
-        left: 50%; 
-        transform: translateX(-50%); 
-        margin: 0 auto 20px auto; 
-        z-index: 5; 
-    }
-    
-    /* 2. الإصلاح الجذري للمؤشرات العاطفية (V25) - في صف أفقي */
+    /* المؤشرات العاطفية (تصبح أفقية) */
     .emotion-monitor-floating {
         position: relative; 
         top: auto; 
         right: auto;
         width: 100%; 
         margin: 10px 0;
+        pointer-events: all; 
     }
     .vital-signs {
         flex-direction: row; 
@@ -312,25 +367,22 @@ body {
         justify-content: space-around; 
         gap: 5px;
         padding: 5px 0;
-        background: var(--color-footer-bg); /* إضافة خلفية لتمييزها */
+        background: var(--color-footer-bg); 
         border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
     .sign {
-        flex: 1 1 45px; 
+        flex: 1 1 50px; 
         min-width: 50px;
         padding: 3px;
-        background: none; /* إزالة الخلفية المزدوجة */
-        box-shadow: none;
-        border: none;
-    }
-    .data-bubble {
-        width: 30px;
-        height: 30px;
-        font-size: 0.6rem;
     }
 
-    /* 3. ضبط حجم الحاوية الرئيسية (المحادثة) */
+    /* إظهار الروبوت كـ FAB على الهاتف */
+    .robot-sentinel-v27 {
+        right: 15px;
+        bottom: 75px;
+    }
+
+    /* ضبط حجم الحاوية الرئيسية (المحادثة) */
     .container {
         width: 100%; 
         height: 65vh; 
