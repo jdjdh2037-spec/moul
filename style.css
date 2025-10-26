@@ -1,238 +1,379 @@
-/* الأكواد المُطوَّرة V32: المُطلق الكمومي (تصميم نظيف ومستقر) */
-
-/* ===================================
-   تعريف الألوان والثوابت
-   ================================== */
+/* الألوان الأساسية: شاطئ صيفي هادئ وألوان متوازنة */
 :root {
-    --color-background-v23: #ffe6cc; 
-    --color-holo-blue: #00bfff; 
-    --color-robot-accent: #ff4500; 
-    --color-text-dark: #333333; 
-    --color-glass-base: rgba(255, 255, 255, 0.9); 
-    --color-immersion-water: rgba(135, 206, 250, 0.4);
-    --color-footer-bg: rgba(255, 255, 255, 0.95);
-    
-    --color-emotion-calm: #1abc9c; 
-    --color-emotion-stress: #e74c3c; 
-    --color-emotion-joy: #f1c40f; 
-    --color-emotion-fear: #9b59b6; 
-    --font-primary: 'Orbitron', sans-serif; /* الخط غير العربي */
-    --font-arabic: 'Tajawal', sans-serif; /* الخط العربي */
+    --color-background: #f0f8ff; /* أزرق سماوي فاتح جداً (خلفية الجسم) */
+    --color-ocean-base: #5DADE2; /* أزرق محيط عميق */
+    --color-wave-crest: #A9D9F8; /* قمة الموجة الفاتحة */
+    --color-text-dark: #2c3e50; /* أزرق غامق للنص */
+    --color-brand: #3498db; /* أزرق رئيسي للواجهة */
+    --color-accent: #f1c40f; /* أصفر (توهج الروبوت) */
+    --color-shadow-light: rgba(0, 0, 0, 0.05);
+    --color-success: #2ecc71; 
+    --color-alert: #e74c3c; 
+    --font-primary: 'Tajawal', sans-serif;
 }
-* {
-    box-sizing: border-box;
+
+/* التنسيقات العامة والـ Mobile-First */
+body {
+    background-color: var(--color-background);
+    font-family: var(--font-primary);
     margin: 0;
     padding: 0;
-    /* تطبيق الخط العربي على كل النص */
-    font-family: var(--font-arabic);
-}
-body {
-    background-color: var(--color-background-v23);
-    color: var(--color-text-dark); 
-    min-height: 100vh;
     overflow-x: hidden;
-    transition: background-color 0.5s ease;
+    color: var(--color-text-dark);
+    direction: rtl;
+    min-height: 100vh;
     display: flex; 
-    flex-direction: column;
-}
-.clean-header h1, .clean-header .mission-statement, .clean-footer strong {
-    font-family: var(--font-primary); /* تطبيق الخط الأجنبي على العناوين */
-}
-
-/* ===================================
-   الطبقات العليا والسفلى (Header & Footer)
-   =================================== */
-.clean-header {
-    position: fixed;
-    width: 100%;
-    background: var(--color-footer-bg);
-    backdrop-filter: blur(8px);
-    z-index: 100;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    top: 0;
-    height: 70px;
-    display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 0 5%;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-}
-.clean-footer {
-    position: static; 
-    width: 100%;
-    background: var(--color-footer-bg);
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-    display: flex;
     justify-content: center;
-    align-items: center;
-    padding: 10px 0;
-    font-size: 0.75rem;
-    z-index: 5;
-    flex-shrink: 0;
-    margin-top: 30px; 
-}
-.main-content-wrapper {
-    flex-grow: 1; 
-    padding-top: 80px; 
-    padding-bottom: 0; 
-    display: flex;
-    flex-direction: column; 
-    align-items: center;
-    position: relative; 
-    min-height: calc(100vh - 70px);
-}
-
-/* ===================================
-   الروبوت (V32) - تصميم روبوت لطيف (Cute Robot)
-   =================================== */
-.cute-robot-sentinel-v31 {
-    width: 60px;
-    height: 70px;
-    margin: 20px 0; 
-    position: relative; 
-    flex-shrink: 0;
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-}
-.cute-bot-shell {
-    transform: scale(0.85);
-    transition: transform 0.3s ease;
-}
-.bot-head {
-    width: 30px;
-    height: 30px;
-    background: var(--color-robot-accent);
-    border-radius: 50% 50% 0 0;
     position: relative;
-    border: 2px solid var(--color-text-dark);
-    margin-bottom: -1px;
 }
-.bot-eye {
-    width: 8px;
-    height: 8px;
-    background: white;
-    border-radius: 50%;
-    position: absolute;
-    top: 5px;
-    left: 11px;
-    box-shadow: 0 0 5px var(--color-holo-blue);
-}
-.bot-antenna {
-    width: 2px;
-    height: 10px;
-    background: var(--color-robot-accent);
-    position: absolute;
-    top: -10px;
-    left: 14px;
-    border-radius: 2px;
-    transform-origin: bottom center;
-    animation: wave-greeting 2s infinite ease-in-out alternate;
-}
-.bot-body {
-    width: 40px;
-    height: 35px;
-    background: var(--color-holo-blue);
-    border-radius: 5px;
-    border: 2px solid var(--color-text-dark);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    font-size: 1.2rem;
-}
-.emotion-halo {
-    width: 70px;
-    height: 70px;
+
+/* ===================================
+   خلفية المحيط (التجسيم والأمواج)
+   =================================== */
+.ocean-view {
+    position: fixed;
     top: 0;
     left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, #d4f0ff 0%, var(--color-ocean-base) 100%);
+    z-index: -2;
+    overflow: hidden;
 }
 
-/* حركة الروبوت عند التفكير */
-.cute-robot-sentinel-v31.thinking .cute-bot-shell {
-    transform: scale(0.95);
-    animation: simple-bounce 0.8s infinite alternate; /* حركة جديدة */
+.ocean-layer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 70%;
+    background-color: var(--color-ocean-base);
 }
-.cute-robot-sentinel-v31.thinking .bot-head {
-    background: var(--color-emotion-stress);
+
+/* تجسيم الأمواج المتحركة (موجات متكررة) */
+.wave-simulation {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 200%;
+    height: 15vh;
+    /* مسار SVG يمثل شكل الموجة باللون الأبيض المائل للأزرق */
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path fill="%23A9D9F8" d="M0,70 Q50,30 100,70 L100,100 L0,100 Z" /></svg>') repeat-x;
+    background-size: 50% 100%;
+    opacity: 0.9;
+    animation: wave-motion 10s linear infinite;
+    transform: translateY(10%); /* وضعها فوق المحيط */
 }
-@keyframes simple-bounce {
-    from { transform: translateY(0) scale(0.9); }
-    to { transform: translateY(-3px) scale(1); }
+
+@keyframes wave-motion {
+    0% { transform: translateX(0) translateY(10%); }
+    100% { transform: translateX(-50%) translateY(10%); }
 }
 
 /* ===================================
-   المؤشرات العاطفية (V32: ضبط الأيقونات والنص)
+   الروبوت "أطلس" (الكيان الديناميكي ثلاثي الأبعاد)
    =================================== */
-.emotion-monitor-floating {
-    position: relative; 
-    width: 90%; 
-    max-width: 600px;
-    margin-bottom: 20px;
-    padding: 15px; 
-    background: var(--color-glass-base); 
+.robot-sentinel {
+    position: fixed;
+    bottom: 25vh; /* يطفو فوق قمم الأمواج */
+    right: 10%;
+    width: 120px;
+    height: 120px;
+    z-index: 100;
+    /* حركة اهتزاز مستمرة (تجسيم للعب) */
+    animation: floating-play 8s infinite ease-in-out alternate;
+}
+
+.dynamic-core {
+    width: 80px;
+    height: 80px;
+    background: radial-gradient(circle at 70% 30%, #fff, var(--color-brand) 70%);
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 40px rgba(52, 152, 219, 0.7);
+    /* تأثير 3D خفيف */
+    border: 3px solid rgba(255, 255, 255, 0.5);
+}
+
+/* قلب الطاقة النبضي (التوهج الداخلي) */
+.energy-pulsar {
+    width: 60%;
+    height: 60%;
+    background-color: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 20%;
+    left: 20%;
+    animation: core-pulsate 1.5s infinite alternate;
+    transition: all 0.5s ease-in-out; /* للانتقال السلس بين الألوان والأحجام */
+}
+
+.robot-sentinel.thinking .energy-pulsar {
+    background-color: var(--color-accent);
+    box-shadow: 0 0 15px var(--color-accent);
+}
+
+@keyframes floating-play {
+    0% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(5deg); }
+    100% { transform: translateY(0) rotate(0deg); }
+}
+
+@keyframes core-pulsate {
+    from { transform: scale(0.9); opacity: 0.7; }
+    to { transform: scale(1.1); opacity: 1; }
+}
+
+/* شاشة حالة الروبوت العائمة */
+.status-gauge {
+    position: absolute;
+    bottom: -15px;
+    padding: 3px 8px;
+    background: var(--color-brand);
+    color: white;
+    font-size: 0.7rem;
     border-radius: 10px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-}
-.vital-signs {
-    display: flex; 
-    justify-content: space-around; 
-    gap: 10px;
-    flex-wrap: wrap; 
-}
-.sign {
-    flex: 1 1 20%; 
-    min-width: 60px;
-    text-align: center;
-    display: flex; 
-    flex-direction: column;
-    align-items: center;
-}
-.sign .label {
-    font-size: 0.8rem; 
-    display: block;
-    margin-top: 5px;
-}
-.sign .value {
-    font-size: 1rem; 
-    font-weight: bold;
-    display: block;
+    right: 50%;
+    transform: translateX(50%);
+    white-space: nowrap;
+    transition: background 0.3s;
 }
 
 /* ===================================
-   حاوية الإدخال (V32: إصلاح ظهور زر الإرسال)
+   الحاوية الرئيسية وواجهة المستخدم (UI)
    =================================== */
 .container {
-    width: 90%; 
-    max-width: 600px;
-    /* ... تنسيقات أخرى ... */
-}
-.input-area-panel {
-    flex-shrink: 0; 
-    padding: 10px;
-    background: var(--color-footer-bg); 
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-    display: flex; 
-    align-items: center;
-}
-.input-controls {
-    flex-grow: 1;
+    position: relative;
+    z-index: 10;
     display: flex;
-    gap: 10px; /* زيادة الفجوة قليلاً */
-    align-items: center; /* **التأكد من محاذاة العناصر** */
-    width: 100%; /* ضمان استخدام المساحة الكاملة */
-}
-.input-controls input {
-    flex-grow: 1;
-    padding: 10px 15px;
-    min-width: 50%; /* ضمان أن حقل النص لا يختفي */
-    /* ... تنسيقات أخرى ... */
-}
-.polished-button {
-    flex-shrink: 0;
-    padding: 10px 15px;
-    height: 40px; /* تحديد ارتفاع ثابت يتناسب مع الحقل */
-    /* ... تنسيقات أخرى ... */
+    flex-direction: column;
+    width: 90%; 
+    max-width: 700px;
+    height: 90vh;
+    margin: 5vh auto;
+    padding: 20px;
+    
+    background: #ffffff; /* خلفية بيضاء نقية */
+    border-radius: 15px;
+    box-shadow: 0 15px 40px var(--color-shadow-light);
+    border: 1px solid #e0e0e0; 
+    transition: transform 0.1s ease-out; /* لتأثير ال Glitch */
 }
 
-/* ... (بقية الأكواد الثابتة مثل حركات الموجة والمسح الضوئي) ... */
+/* رأس التطبيق (تعريف الروبوت) */
+.app-header {
+    border-bottom: 2px solid #f5f5f5;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.robot-identity {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.robot-identity .fa-robot {
+    font-size: 1.5rem;
+    color: var(--color-brand);
+    margin-left: 10px;
+}
+
+.robot-identity h1 {
+    font-size: 1.1rem;
+    font-weight: 900;
+    color: var(--color-text-dark);
+}
+
+/* لوحة القياس العاطفية المتقدمة */
+.emotion-monitor {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* شاشة عرض Lambda الدائرية */
+.lambda-circle {
+    width: 80px;
+    height: 80px;
+    border: 4px solid var(--color-brand);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.lambda-label { font-size: 0.65rem; color: #777; }
+.lambda-value { font-size: 1.8rem; font-weight: 900; color: var(--color-brand); }
+
+/* مؤشرات العواطف الحيوية */
+.vital-signs {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px 20px;
+}
+
+.sign {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 3px;
+    border-radius: 5px;
+}
+
+.sign .label {
+    font-size: 0.85rem;
+    color: var(--color-text-dark);
+    font-weight: 700;
+    width: 50px;
+}
+
+.sign .value {
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding-right: 5px;
+    color: var(--color-brand);
+}
+
+.pride-sign .value, .joy-sign .value { color: var(--color-success); }
+.guilt-sign .value, .fear-sign .value { color: var(--color-alert); }
+
+/* منطقة الدردشة - شاشة محادثة متطورة */
+.chat-interface {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-box {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+    background-color: #fcfcfc;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    /* تحسين شكل شريط التمرير */
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-brand) #fcfcfc;
+}
+
+.chat-box::-webkit-scrollbar { width: 8px; }
+.chat-box::-webkit-scrollbar-thumb { background-color: var(--color-brand); border-radius: 4px; }
+.chat-box::-webkit-scrollbar-track { background-color: #fcfcfc; }
+
+
+.chat-box p {
+    padding: 12px 15px;
+    border-radius: 20px;
+    margin: 8px 0;
+    line-height: 1.6;
+    font-size: 0.95rem;
+    max-width: 85%;
+}
+
+.chat-box .user {
+    text-align: right;
+    background-color: var(--color-brand);
+    color: white;
+    margin-right: auto;
+    border-bottom-left-radius: 5px;
+}
+
+.chat-box .ai {
+    text-align: right;
+    background-color: #e6f0ff;
+    color: var(--color-text-dark);
+    margin-left: auto;
+    border-bottom-right-radius: 5px;
+    display: flex;
+    align-items: flex-start;
+}
+
+.chat-box .ai .fa-wave-square {
+    font-size: 1rem;
+    color: var(--color-brand);
+    margin-left: 10px;
+    padding-top: 3px;
+}
+
+/* مؤشر الكتابة المطور */
+.typing-indicator {
+    display: none;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 5px 10px;
+    color: var(--color-brand);
+    font-size: 0.9rem;
+}
+.typing-indicator .fa-ellipsis-h {
+    margin-left: 10px;
+    animation: blink 1s infinite;
+}
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+/* حقل الإدخال وزر الإرسال - تصميم عصري */
+.input-area {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+#user-input {
+    flex-grow: 1;
+    padding: 12px 20px;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+#user-input:focus {
+    border-color: var(--color-brand);
+    outline: none;
+}
+
+#send-button {
+    padding: 12px 20px;
+    border: none;
+    background-color: var(--color-brand);
+    color: white;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: 25px;
+    transition: background-color 0.3s;
+    display: flex; /* لدمج الأيقونة والنص بشكل جيد */
+    align-items: center;
+}
+
+#send-button i { margin-left: 5px; }
+
+/* استعلام الوسائط: تحسين لمشاهدة سطح المكتب */
+@media (min-width: 768px) {
+    .container {
+        height: 80vh;
+        max-width: 900px;
+    }
+    
+    .app-header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .emotion-monitor {
+        width: 60%;
+        justify-content: flex-end;
+    }
+
+    .lambda-circle { margin-left: 20px; }
+    .robot-sentinel { right: 20%; }
+}
