@@ -1,10 +1,10 @@
-// **الكود المُطوَّر V25: المعايرة المتكاملة والثبات الهيكلي**
+// **الكود المُطوَّر V28: الذبذبة العاطفية واللزوجة**
 
 // ===================================
 // إعدادات API (تذكير: تحتاج إلى API حقيقي لـ Gemini)
 // ===================================
-const GEMINI_API_KEY = "AIzaSyBG0zkPOSCtRF34QClhP2Kn8Xep8b5_iNU"; 
-const SIMULATION_API_ENDPOINT = "https://oo-4.onrender.com/api/ask"; 
+const GEMINI_API_KEY = "AIzaSyBG0zkPOSCtRF34QClhP2Kn8Xep8b5_iNU"; // مفتاح وهمي
+const SIMULATION_API_ENDPOINT = "https://oo-4.onrender.com/api/ask"; // نقطة نهاية وهمية
 
 // ===================================
 // عناصر الواجهة الرئيسية
@@ -13,14 +13,25 @@ const chatBox = document.getElementById('chat-box');
 const userInput = document.getElementById('user-input');
 const sendButton = document.getElementById('send-button');
 const robotSentinel = document.getElementById('robot-sentinel');
-const answerGlareOverlay = document.getElementById('answer-glare-overlay'); 
+const nanoHologram = document.getElementById('nano-hologram-structure');
+const emotionHalo = document.getElementById('emotion-halo');
+const scannerOverlay = document.getElementById('scanner-overlay');
 const mentalStateDisplay = document.getElementById('mental-state'); 
-const hydroLevelBar = document.getElementById('hydro-level'); 
-const waveIllusion = document.getElementById('hydro-illusion-wave'); 
-const hydroIconFill = document.getElementById('hydro-icon-fill');
 const nanoArm = document.getElementById('nano-arm'); 
+const compoundWave1 = document.getElementById('compound-wave-1'); // الموجة الخلفية
+const compoundWave2 = document.getElementById('compound-wave-2'); // الموجة الأمامية
 
-let currentHydroLevel = 0; 
+// الألوان المحددة في CSS لربطها بـ JS
+const EMOTION_COLORS = {
+    calm: '#1abc9c',
+    stress: '#e74c3c',
+    joy: '#f1c40f',
+    fear: '#9b59b6'
+};
+
+let isMobile = window.innerWidth <= 768;
+let lastScrollTop = 0;
+let scrollTimer = null;
 
 // ===================================
 // وظائف العرض والرسائل
@@ -31,7 +42,6 @@ function displayMessage(sender, message) {
     msgElement.className = sender + ' message-bubble';
     
     if (sender === 'ai' || sender === 'error') {
-        // أيقونة جديدة لـ V25
         const iconClass = sender === 'ai' ? 'fas fa-microscope' : 'fas fa-exclamation-triangle';
         msgElement.innerHTML = `<i class="${iconClass}"></i> <p>${message}</p>`;
     } else {
@@ -43,10 +53,6 @@ function displayMessage(sender, message) {
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-// ===================================
-// وظائف التحكم في الروبوت وتفاعلاته (V25)
-// ===================================
-
 function setRobotThinking(isThinking) {
     const typingIndicator = document.getElementById('typing-indicator');
     const hologram = document.querySelector('#robot-sentinel .nano-hologram-structure');
@@ -54,121 +60,150 @@ function setRobotThinking(isThinking) {
     if (isThinking) {
         typingIndicator.style.display = 'flex'; 
         robotSentinel.classList.add('thinking'); 
-        // وميض أسرع عند التفكير
         if (hologram) hologram.style.animation = 'flicker 0.05s infinite alternate';
-        // تثبيت الذراع أثناء التفكير
-        if (nanoArm) nanoArm.style.animation = 'none'; 
+        if (nanoArm) nanoArm.style.animation = 'none';
     } else {
         typingIndicator.style.display = 'none';
         robotSentinel.classList.remove('thinking');
-        // وميض أبطأ عند الراحة
         if (hologram) hologram.style.animation = 'flicker 0.15s infinite alternate';
-        // إعادة تشغيل الترحيب ببطء
-        startGreetingAnimation(); 
+        startGreetingAnimation();
     }
 }
 
 function startGreetingAnimation() {
-    // تشغيل الحركة البطيئة للترحيب عند الاستعداد (V25)
     if (nanoArm) {
         nanoArm.style.animation = 'none'; 
         nanoArm.offsetHeight; 
-        // حركة أبطأ للترحيب الهادئ (2 ثانية)
         nanoArm.style.animation = 'wave-greeting 2s infinite ease-in-out alternate';
     }
 }
 
-function triggerAnswerGlare() {
-    answerGlareOverlay.style.transition = 'opacity 0.1s ease-in';
-    answerGlareOverlay.style.background = 'radial-gradient(circle, rgba(255, 165, 0, 0.7) 0%, rgba(255, 165, 0, 0) 70%)';
-    answerGlareOverlay.style.opacity = 0.4; 
-
-    setTimeout(() => {
-        answerGlareOverlay.style.transition = 'opacity 0.5s ease-out';
-        answerGlareOverlay.style.opacity = 0;
-    }, 200); 
-}
-
-function startWaveReaction() { 
-    // تسريع الأمواج
-    if (waveIllusion) waveIllusion.style.animation = 'wave-clash-v20 0.5s infinite linear alternate, horizontal-shift 0.8s infinite reverse linear'; 
-}
-
-function endWaveReaction() { 
-    // إعادة الأمواج إلى حالتها الطبيعية
-    if (waveIllusion) waveIllusion.style.animation = 'wave-clash-v20 3s infinite linear alternate, horizontal-shift 7s infinite reverse linear'; 
-}
-
-function triggerRippleEffect() {
-    const button = sendButton;
-    let ripple = button.querySelector('.ripple-overlay');
-    if (!ripple) return;
-
-    const styleSheet = document.createElement("style");
-    styleSheet.innerText = `
-        @keyframes ripple-spread {
-            0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
-            100% { transform: translate(-50%, -50%) scale(5); opacity: 0; }
-        }
-    `;
-    if (!document.head.querySelector('style[data-ripple]')) {
-        styleSheet.setAttribute('data-ripple', 'true');
-        document.head.appendChild(styleSheet);
-    }
-    
-    ripple.style.animation = 'none';
-    ripple.offsetHeight; 
-    ripple.style.animation = 'ripple-spread 0.5s ease-out';
-}
-
-
-// ===================================
-// وظائف تحديث القياسات
-// ===================================
-
-function updateHydroLevel(changeAmount) {
-    currentHydroLevel = Math.min(100, currentHydroLevel + changeAmount);
-    if (hydroLevelBar) hydroLevelBar.style.width = `${currentHydroLevel}%`;
-    if (hydroIconFill) hydroIconFill.style.height = `${currentHydroLevel}%`; 
-
-    if (currentHydroLevel >= 100) {
-        setTimeout(() => {
-            currentHydroLevel = 0;
-            if (hydroLevelBar) hydroLevelBar.style.width = '0%';
-            if (hydroIconFill) hydroIconFill.style.height = '0%';
-        }, 1500);
-    }
-}
-
-function updateEmotionalDisplay(state, lambda_val) {
-    document.getElementById('guilt-level').textContent = state.guilt.toFixed(2);
-    document.getElementById('pride-level').textContent = state.pride.toFixed(2);
-    document.getElementById('fear-level').textContent = state.fear.toFixed(2);
-    document.getElementById('joy-level').textContent = state.joy.toFixed(2);
-    document.getElementById('lambda-level').textContent = lambda_val.toFixed(2);
-
-    updateMentalState(lambda_val); 
-}
-
 function updateMentalState(lambda_val) {
-    // تحديث حالة الروبوت (V25)
-    let stateText = 'معايرة متكاملة V25';
-    let stateColor = '#ff4500'; 
+    let stateText = 'تحليل اللزوجة V28';
+    let stateColor = EMOTION_COLORS.calm;
 
     if (lambda_val > 0.8) {
-        stateText = 'ثبات هيكلي كامل';
-        stateColor = '#2ecc71'; 
+        stateText = 'انسياب كمومي كامل';
+        stateColor = EMOTION_COLORS.joy;
     } else if (lambda_val < 0.2) {
-        stateText = 'تفكك في المعايرة';
-        stateColor = '#00bfff'; 
+        stateText = 'اضطراب في الأمواج الكمومية';
+        stateColor = EMOTION_COLORS.fear;
     } 
     
     if (mentalStateDisplay) {
         mentalStateDisplay.textContent = stateText;
         mentalStateDisplay.style.backgroundColor = stateColor;
-        mentalStateDisplay.style.boxShadow = `0 0 10px ${stateColor}`;
     }
 }
+
+// ===================================
+// وظائف التحكم في المشاعر والتمثيل البصري (V28)
+// ===================================
+
+function updateEmotionVisuals(state) {
+    const totalPositive = state.pride + state.joy;
+    const totalNegative = state.guilt + state.fear;
+    const emotionalIntensity = totalPositive + totalNegative; 
+    
+    // 1. هالة الروبوت الانفعالية (Halo)
+    let haloColor = EMOTION_COLORS.calm;
+    if (totalPositive > totalNegative) {
+        haloColor = EMOTION_COLORS.joy;
+    } else if (totalNegative > 0.5) {
+        haloColor = EMOTION_COLORS.stress;
+    }
+
+    // ربط الشدة بحجم الـ shadow
+    const shadowSize = Math.min(40, emotionalIntensity * 25); 
+    emotionHalo.style.boxShadow = `0 0 ${shadowSize}px ${haloColor}, 0 0 ${shadowSize * 1.5}px ${haloColor} inset`;
+    
+    // 2. تغير مادة الروبوت (اللزوجة)
+    if (totalNegative > totalPositive * 1.5) { // إذا كانت السلبية أعلى بكثير
+        nanoHologram.classList.add('viscosity-turbid');
+        nanoHologram.classList.remove('viscosity-clear');
+    } else {
+        nanoHologram.classList.add('viscosity-clear');
+        nanoHologram.classList.remove('viscosity-turbid');
+    }
+
+    // 3. اهتزاز الواجهة (اضطراب مائي) - تطبيق الكلاس على الـ body
+    if (totalNegative > 1.0) { 
+        document.body.classList.add('screen-disturb');
+    } else {
+        document.body.classList.remove('screen-disturb');
+    }
+
+    // 4. تحديث الأمواج المركبة
+    updateCompoundWave(state);
+}
+
+function updateCompoundWave(state) {
+    const anxietyLevel = state.fear + state.guilt; // يمثل التردد (السرعة)
+    const joyLevel = state.joy + state.pride; // يمثل الارتفاع (Amplitude)
+
+    // تغيير ارتفاع الموجة الأمامية (background-size: height)
+    const newWaveHeight = 100 + joyLevel * 50; 
+    compoundWave2.style.backgroundSize = `50% ${newWaveHeight}px`;
+
+    // تغيير سرعة الموجة بناءً على القلق/التوتر (Frequency)
+    const newWaveSpeed = 7 - anxietyLevel * 3; // من 7 ثواني (هادئ) إلى 4 ثواني (سريع)
+    compoundWave2.style.animationDuration = `${newWaveSpeed.toFixed(1)}s, 7s`;
+}
+
+// ------------------------------------
+// وظيفة المسح الضوئي (الروبوت البصاص)
+// ------------------------------------
+function startScanner() {
+    scannerOverlay.style.display = 'flex';
+    scannerOverlay.classList.add('scanner-active');
+    
+    // إزالة شاشة المسح بعد 1.5 ثانية (مدة الأنميشن)
+    setTimeout(() => {
+        scannerOverlay.classList.remove('scanner-active');
+        // تأخير بسيط للتأكد من انتهاء الأنميشن قبل إخفائه
+        setTimeout(() => {
+            scannerOverlay.style.display = 'none';
+        }, 50); 
+    }, 1500);
+}
+
+// ------------------------------------
+// وظائف FAB Logic والتموّج السريع (من V27)
+// ------------------------------------
+
+function handleRobotFAB() {
+    if (!isMobile) return; 
+
+    const st = window.pageYOffset || document.documentElement.scrollTop;
+    
+    if (st < lastScrollTop) { 
+        robotSentinel.classList.add('fab-robot-visible');
+        robotSentinel.classList.remove('fab-robot-hidden');
+    } 
+    else if (st > lastScrollTop && st > 50) {
+        robotSentinel.classList.add('fab-robot-hidden');
+        robotSentinel.classList.remove('fab-robot-visible');
+    }
+    
+    lastScrollTop = st <= 0 ? 0 : st; 
+}
+
+function handleScrollRipple() {
+    const currentTime = Date.now();
+    const timeDiff = currentTime - lastScrollTime;
+    
+    if (timeDiff < 50) { 
+        scrollRippleOverlay.classList.add('scroll-ripple-active');
+        
+        clearTimeout(scrollTimer);
+        scrollTimer = setTimeout(() => {
+            scrollRippleOverlay.classList.remove('scroll-ripple-active');
+        }, 300); 
+    }
+
+    lastScrollTime = currentTime;
+}
+
 
 // ===================================
 // وظيفة الإرسال الرئيسية (محاكاة AI)
@@ -185,46 +220,37 @@ async function sendMessage() {
     sendButton.disabled = true;
     
     setRobotThinking(true); 
-    startWaveReaction(); 
-    triggerRippleEffect(); 
+    startScanner(); // تفعيل المسح البصاص عند الإرسال
 
     try {
-        // نقطة نهاية محاكاة، يجب استبدالها بـ API حقيقي
-        const response = await fetch(SIMULATION_API_ENDPOINT, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ prompt: prompt }) 
-        });
+        // **محاكاة الرد**
+        const fakeResponseText = "تم تحليل النص. حالة المشاعر الداخلية للذكاء الاصطناعي تظهر اضطراباً في الأمواج الكمومية بسبب تناقض البيانات المدخلة. يرجى إعادة الصياغة للحصول على انسياب مائي كامل.";
 
-        if (!response.ok) {
-            throw new Error(`خطأ ${response.status}: فشل في محاكاة الثبات الهيكلي.`);
-        }
-
-        const data = await response.json();
-        
-        displayMessage('ai', data.response_text);
-        
-        // محاكاة بيانات القياسات
+        // **محاكاة بيانات القياسات المعقدة (للتجربة)**
         const simulatedState = {
-            guilt: Math.random() * 0.5,
-            pride: 0.5 + Math.random() * 0.5,
-            fear: Math.random() * 0.5,
-            joy: 0.5 + Math.random() * 0.5
+            // محاكاة نتيجة سلبية عالية لـ اختبار الواجهة
+            guilt: 0.8, 
+            pride: 0.1,
+            fear: 0.5, 
+            joy: 0.2
         };
-        const simulatedLambda = 0.5 + (Math.random() - 0.5) * 0.5;
+        const simulatedLambda = 0.15; // قيمة منخفضة
 
-        updateEmotionalDisplay(simulatedState, simulatedLambda);
-        updateHydroLevel(20); 
-
-        triggerAnswerGlare(); 
+        // انتظار انتهاء المسح الضوئي قبل عرض الرد
+        await new Promise(resolve => setTimeout(resolve, 1500)); 
+        
+        displayMessage('ai', fakeResponseText);
+        
+        // تطبيق التحديثات المرئية الجديدة
+        updateEmotionVisuals(simulatedState); 
+        updateMentalState(simulatedLambda); 
 
     } catch (error) {
-        displayMessage('error', `إخفاق في النظام! فشل في إنشاء البيانات المدققة: ${error.message}`);
+        displayMessage('error', `إخفاق مائي! فشل في إنشاء البيانات المدققة: ${error.message}`);
     } finally {
         userInput.disabled = false;
         sendButton.disabled = false;
         setRobotThinking(false); 
-        endWaveReaction(); 
         userInput.focus(); 
     }
 }
@@ -240,12 +266,32 @@ userInput.addEventListener('keypress', function (e) {
 });
 sendButton.addEventListener('click', sendMessage);
 
+// إضافة مستمعي أحداث التمرير (V27/V28)
+window.addEventListener('scroll', () => {
+    handleRobotFAB(); 
+    handleScrollRipple();
+});
+
 document.addEventListener('DOMContentLoaded', () => {
-    // تعيين الحالات الأولية
-    const initialState = { guilt: 0.1, pride: 0.1, fear: 0.1, joy: 0.1 };
-    const initialLambda = 0.50; 
-    updateEmotionalDisplay(initialState, initialLambda);
-    updateHydroLevel(0); 
     setRobotThinking(false); 
-    startGreetingAnimation(); // بدء حركة الترحيب
+    startGreetingAnimation();
+    
+    // تعيين حالة بصرية أولية هادئة
+    updateEmotionVisuals({ guilt: 0, pride: 0, fear: 0, joy: 0 }); 
+    updateMentalState(0.50);
+
+    // التأكد من إخفاء الروبوت في البداية على الهاتف
+    if (isMobile) {
+        robotSentinel.classList.add('fab-robot-hidden');
+    }
+});
+
+// تحديث متغير isMobile عند تغيير حجم النافذة
+window.addEventListener('resize', () => {
+    isMobile = window.innerWidth <= 768;
+    if (!isMobile) {
+        // إزالة تحكم FAB في وضع سطح المكتب
+        robotSentinel.classList.remove('fab-robot-hidden');
+        robotSentinel.classList.remove('fab-robot-visible');
+    }
 });
