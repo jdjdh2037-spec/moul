@@ -1,32 +1,48 @@
-/* style.css - تصميم فائق الواقعية ومحسن للموبايل */
+/* style.css - تطوير إلى تصميم دفتر رسم إبداعي (Creative Sketchbook Design) */
 
-/* الخطوط والتجهيزات الأساسية */
+/* @import لخطوط فنية ويدوية */
+@import url('https://fonts.googleapis.com/css2?family=Reem+Kufi+Fun:wght@400..700&family=Amiri+Quran&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Kufam:ital,wght@0,400..900;1,400..900&display=swap');
+
+
+/* الخطوط والتجهيزات الأساسية - تحويل إلى دفتر رسم/ورقة قديمة */
 body {
-    font-family: 'Cairo', sans-serif;
-    background-color: #0d0d0d; /* خلفية سوداء عميقة */
-    color: #e0e0e0;
+    /* تغيير الخط إلى خط مرح/فني مع احتياطي جيد */
+    font-family: 'Kufam', 'Reem Kufi Fun', 'Cairo', sans-serif;
+    /* خلفية ورقية فاتحة مع نقش (نقاط أو خطوط) */
+    background-color: #f7f7e9; /* لون ورقة قديمة */
+    background-image: linear-gradient(0deg, transparent 24px, #e9e9d6 25px),
+                      linear-gradient(90deg, #f7f7e9 98%, #d9d9c6 100%);
+    background-size: 100% 25px, 100% 100%; /* خطوط كل 25px */
+    color: #333333; /* لون حبر داكن */
     margin: 0;
     padding: 0;
-    line-height: 1.6;
+    line-height: 1.7;
     direction: rtl; 
     text-align: right;
     min-height: 100vh;
+    /* ظل خفيف للجسم وكأنه كتاب على الطاولة */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
 }
 
 .container {
-    max-width: 1200px;
-    margin: 30px auto;
-    padding: 0 10px; /* تقليل الحشو على الهاتف */
+    max-width: 1000px;
+    margin: 50px auto; /* زيادة الهامش ليبرز كالصفحة */
+    padding: 20px;
+    /* محاكاة لحافة الدفتر */
+    border-right: 5px dashed #ff6b6b; /* خط أحمر جانبي */
+    background-color: transparent; /* الخلفية ستكون الـ body */
 }
 
-/* الهيدر */
+/* الهيدر - تحويل إلى "عنوان الدفتر" */
 header {
-    background-color: #1a1a1a;
-    color: #4CAF50;
-    padding: 20px 0;
+    background-color: transparent; /* لا خلفية صلبة */
+    color: #333333;
+    padding: 10px 0 20px 0;
     text-align: center;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-    border-bottom: 4px solid #4CAF50;
+    /* إزالة الظل والحدود الصلبة */
+    box-shadow: none; 
+    border-bottom: 2px dashed #999999; /* خط متقطع كالمسطرة */
 }
 
 .header-content {
@@ -37,205 +53,262 @@ header {
 }
 
 .logo {
-    font-size: 2.5em;
+    font-family: 'Caveat', cursive; /* خط يدوي فني */
+    font-size: 3.5em;
     margin-bottom: 5px;
-    color: #FF5722; /* لون بارز */
+    color: #0c8a30; /* لون أقرب للحبر الأخضر */
+    /* ظل نصي خفيف لإعطاء عمق الرسم */
+    text-shadow: 1px 1px 0 #fff, 2px 2px 0 #bbb;
 }
 
 h2 {
-    color: #4CAF50;
-    border-bottom: 1px solid #333;
-    padding-bottom: 8px;
-    margin-bottom: 20px;
+    color: #000000;
+    font-family: 'Reem Kufi Fun', sans-serif;
+    border-bottom: none;
+    padding-bottom: 5px;
+    margin-bottom: 25px;
     font-weight: 700;
+    /* إضافة خط يدوي تحت العنوان */
+    position: relative;
+}
+h2::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 3px;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="3" viewBox="0 0 100 3"><path d="M0 2 C 25 0, 75 4, 100 2" stroke="%23ff6b6b" stroke-width="2" fill="none"/></svg>');
+    background-repeat: repeat-x;
+    background-size: 100px 3px;
 }
 
-/* الأقسام العامة - تأثير الزجاج المتجمد (Glassmorphism) */
+
+/* الأقسام العامة - تأثير الملصقات/القصاصات الفنية */
 section {
-    background-color: rgba(30, 30, 30, 0.7); /* خلفية شبه شفافة */
-    backdrop-filter: blur(5px); /* تأثير الزجاج */
-    padding: 25px;
-    margin-bottom: 30px;
-    border-radius: 12px;
-    border: 1px solid rgba(76, 175, 80, 0.3); /* إطار أخضر خفيف */
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+    background-color: rgba(255, 255, 255, 0.9); /* ورقة بيضاء شبه شفافة */
+    backdrop-filter: none; /* إزالة تأثير الزجاج */
+    padding: 30px;
+    margin-bottom: 40px;
+    /* حواف غير منتظمة (محاكاة ورقة مقطوعة) */
+    border-radius: 18px 5px 12px 25px; 
+    border: 3px dashed #bbbbbb; /* إطار متقطع خفيف */
+    /* ظل ثلاثي الأبعاد يبدو كقصاصة ملصقة */
+    box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.15), 
+                15px 15px 0px rgba(189, 189, 189, 0.1); 
+    /* تحويل طفيف كأنه مائل قليلاً */
+    transform: rotate(calc(var(--i, 1) * -1deg));
+    transition: transform 0.2s ease-in-out;
 }
+section:nth-child(odd) {
+    --i: -1;
+    transform: rotate(1deg);
+}
+
 
 .highlight {
-    color: #FF5722;
+    color: #cc0000; /* لون قلم تحديد أحمر */
     font-weight: 900;
+    font-family: 'Amiri Quran', serif; /* خط أكثر رسمية للتركيز */
 }
 
-/* لوحة المشاعر - تحسين الترتيب */
+/* لوحة المشاعر - تحويل إلى "ملصقات ملاحظات" */
 .emotions-grid {
     display: flex;
     justify-content: space-around;
-    gap: 15px;
+    gap: 20px;
     flex-wrap: wrap;
 }
 
 .emotion-card {
-    flex-basis: calc(20% - 15px);
-    min-width: 130px;
-    padding: 15px;
-    border-radius: 8px;
+    flex-basis: calc(20% - 20px);
+    min-width: 150px;
+    padding: 20px;
+    /* شكل ملصق عشوائي */
+    border-radius: 10px 30px 10px 20px; 
     text-align: center;
-    color: white;
-    border: 2px solid #555;
-    transition: transform 0.3s ease-out;
+    color: #1a1a1a;
+    border: none;
+    /* ظل يبرز الملصق */
+    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2); 
+    transition: transform 0.2s ease-out, box-shadow 0.2s;
+    /* زاوية عشوائية طفيفة */
+    transform: rotate(calc(var(--j, 0) * 2deg - 1deg));
 }
 
+.emotion-card:nth-child(1) { --j: 1; }
+.emotion-card:nth-child(2) { --j: 2; transform: rotate(-0.5deg); }
+.emotion-card:nth-child(3) { --j: 3; }
+.emotion-card:nth-child(4) { --j: 4; transform: rotate(1.5deg); }
+.emotion-card:nth-child(5) { --j: 5; }
+
+
 .emotion-card:hover {
-    transform: scale(1.05);
+    transform: scale(1.05) rotate(0deg);
+    box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.3);
 }
 
 .emotion-card i {
-    font-size: 2em;
-    margin-bottom: 5px;
+    font-size: 2.5em;
+    margin-bottom: 8px;
     display: block;
+    color: inherit;
 }
 
 .emotion-card p {
-    font-size: 1.8em;
-    font-weight: 900;
+    font-size: 1.6em;
+    font-weight: 800;
+    font-family: 'Caveat', cursive;
 }
 
-/* ألوان المشاعر (تماسك بصري) */
-.guilt { background-color: #9A3232; }
-.fear { background-color: #795548; }
-.pride { background-color: #388E3C; }
-.joy { background-color: #FFC107; color: #121212; }
-.lambda { background-color: #1976D2; border-color: #eee; } 
+/* ألوان المشاعر (ألوان الطلاء/الأقلام) */
+.guilt { background-color: #fca8a8; color: #440000; } /* أحمر باهت */
+.fear { background-color: #c4a179; color: #333333; } /* بني ورقي */
+.pride { background-color: #a8fca8; color: #004400; } /* أخضر طازج */
+.joy { background-color: #fffac8; color: #886000; } /* أصفر لامع */
+.lambda { background-color: #a8d5fc; color: #000044; } /* أزرق سماوي */ 
 
-/* منطقة الدردشة - الواقعية */
+/* منطقة الدردشة - محاكاة لـ "صفحة الحوار" */
 .chat-area {
-    background-color: rgba(30, 30, 30, 0.9);
-    border: 1px solid #333;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
-    border-radius: 12px;
+    background-color: #ffffff;
+    border: 3px solid #666;
+    box-shadow: 8px 8px 0px rgba(0, 0, 0, 0.3);
+    border-radius: 15px;
+    padding: 10px;
 }
 
-/* خلفية شاشة الدردشة المميزة */
+/* خلفية شاشة الدردشة المميزة - لا تغيير */
 .chat-box {
-    height: 450px;
+    height: 400px;
     padding: 15px;
     overflow-y: auto;
-    border-bottom: 1px solid #333;
+    border-bottom: 2px dashed #bbbbbb;
     display: flex;
     flex-direction: column; 
     justify-content: flex-end; 
-    /* شريط تمرير غير مرئي ومريح */
-    scrollbar-width: none; 
-    -ms-overflow-style: none;
+    scrollbar-width: thin; 
+    scrollbar-color: #999 #eee;
 }
 .chat-box::-webkit-scrollbar {
-    display: none;
+    width: 6px;
+}
+.chat-box::-webkit-scrollbar-thumb {
+    background-color: #999;
+    border-radius: 3px;
 }
 
-/* تصميم رسائل الفقاعات الحوارية المتقدمة (استخدام clip-path) */
+/* تصميم رسائل الفقاعات الحوارية المتقدمة - شكل قصاصات غير منتظمة */
 .chat-box p {
-    margin: 10px 0;
-    padding: 12px 18px;
-    max-width: 85%;
+    margin: 15px 0;
+    padding: 15px 20px;
+    max-width: 80%;
     word-wrap: break-word;
-    font-size: 0.95em;
+    font-size: 1em;
+    font-family: 'Caveat', cursive;
     position: relative;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
+    /* ظل خفيف ومرسوم باليد */
+    box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
 }
 
-/* فقاعة المستخدم */
+/* فقاعة المستخدم (ملاحظة ورقية صفراء) */
 .user {
-    background-color: #4CAF50;
-    color: black;
+    background-color: #fff7b6; /* ملاحظة صفراء */
+    color: #333;
     align-self: flex-start;
-    /* شكل فقاعة حوارية */
-    clip-path: polygon(0% 0%, 100% 0%, 100% 75%, 85% 100%, 0% 100%);
-    border-radius: 15px 15px 15px 4px;
+    /* شكل ورقة ممزقة - باستخدام حدود غير منتظمة بدلاً من clip-path */
+    border: 2px solid #a1a1a1;
+    border-radius: 10px 40px 15px 5px;
+    transform: rotate(-1deg);
 }
 
-/* فقاعة الروبوت */
+/* فقاعة الروبوت (ملاحظة ورقية زرقاء) */
 .ai {
-    background-color: #34495e;
-    color: #e0e0e0;
+    background-color: #b6e2ff; /* ملاحظة زرقاء */
+    color: #333;
     align-self: flex-end;
-    /* شكل فقاعة حوارية */
-    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 15% 100%, 0% 75%);
-    border-radius: 15px 15px 4px 15px;
+    /* شكل ورقة ممزقة - باستخدام حدود غير منتظمة */
+    border: 2px solid #a1a1a1;
+    border-radius: 40px 10px 5px 15px;
+    transform: rotate(1deg);
 }
 
-/* منطقة الإدخال وترتيب الهاتف */
+/* منطقة الإدخال - تحويل إلى "مربع كتابة" */
 .input-area {
     display: flex;
-    flex-direction: column; /* الترتيب الافتراضي للهاتف: عمودي */
+    flex-direction: column; 
     padding: 15px;
-    gap: 10px;
+    gap: 15px;
 }
 
 #user-input {
-    padding: 15px 20px;
-    border: 1px solid #555;
-    border-radius: 8px;
-    font-size: 1em;
-    background-color: #000;
-    color: #eee;
-    text-align: right;
-}
-
-/* زر الإرسال (أسفل حقل الكتابة على الهاتف) */
-#send-button {
-    background-color: #4CAF50;
-    color: black;
-    border: none;
-    padding: 12px 25px;
-    border-radius: 8px;
-    cursor: pointer;
+    padding: 18px 25px;
+    border: 3px solid #333;
+    /* شكل مرسوم باليد */
+    border-radius: 12px 30px 12px 30px; 
     font-size: 1.1em;
-    font-weight: 700;
-    transition: background-color 0.3s;
-    width: 100%; /* اجعله يملأ العرض على الهاتف */
+    background-color: #ffffff;
+    color: #1a1a1a;
+    text-align: right;
+    font-family: 'Kufam', sans-serif;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
-/* مؤشر الكتابة (Typing Indicator) - تحسين الوضوح */
+/* زر الإرسال - تحويل إلى "ختم/دبوس" */
+#send-button {
+    background-color: #ff6b6b; /* لون الختم الأحمر */
+    color: white;
+    border: 3px solid #cc0000;
+    padding: 15px 30px;
+    /* شكل غير منتظم (زر مرسوم) */
+    border-radius: 50% 10% 50% 10% / 10% 50% 10% 50%;
+    cursor: pointer;
+    font-size: 1.2em;
+    font-weight: 900;
+    transition: all 0.2s;
+    width: 100%; 
+    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.3);
+}
+
+#send-button:hover {
+    background-color: #cc0000;
+    box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
+    transform: translate(2px, 2px);
+}
+
+/* مؤشر الكتابة (Typing Indicator) - تحسين ليناسب الدفتر */
 .typing-indicator {
     display: flex;
     align-items: center;
     align-self: flex-end;
     margin: 8px 0;
     padding: 10px 15px;
-    background-color: #2c3e50;
+    background-color: #e9e9d6; /* لون ورقي */
     border-radius: 18px;
-    color: #4CAF50;
+    color: #0c8a30; /* لون الحبر الأخضر */
+    border: 1px dashed #999;
 }
 
-.typing-text {
-    margin-right: 8px;
+.dot {
+    background-color: #0c8a30;
+    animation: bounce 1.4s infinite ease-in-out both;
+}
+
+/* التذييل - تحويل إلى "ملاحظة سريعة" */
+footer {
+    background-color: transparent;
+    color: #666;
+    text-align: center;
+    padding: 30px 0 10px 0;
+    margin-top: 50px;
+    border-top: 2px dotted #bbbbbb;
     font-style: italic;
     font-size: 0.9em;
 }
 
-.dot {
-    width: 6px;
-    height: 6px;
-    margin: 0 2px;
-    background-color: #4CAF50;
-    border-radius: 50%;
-    animation: bounce 1.4s infinite ease-in-out both;
-}
 
-/* التذييل */
-footer {
-    background-color: #000000;
-    color: #888;
-    text-align: center;
-    padding: 20px 0;
-    margin-top: 50px;
-    border-top: 2px solid #333;
-}
-
-
-/* استجابة الهاتف (Media Queries) */
+/* استجابة الهاتف (Media Queries) - تعديل بسيط للهوامش */
 @media (min-width: 768px) {
-    /* على الشاشات الكبيرة، اجعل الإدخال والإرسال بجانب بعضهما */
     .input-area {
         flex-direction: row;
     }
@@ -245,12 +318,21 @@ footer {
     .emotions-grid {
         justify-content: space-between;
     }
+    /* زيادة دوران العناصر قليلاً على الشاشات الكبيرة */
+    section {
+        transform: rotate(calc(var(--i, 1) * -1.5deg));
+    }
+    section:nth-child(odd) {
+        transform: rotate(1.5deg);
+    }
 }
 
 @media (max-width: 767px) {
-    /* على الشاشات الصغيرة، ضع بطاقتين فقط في السطر */
     .emotion-card {
         flex-basis: calc(50% - 10px);
-        margin-bottom: 10px;
+        margin-bottom: 15px;
+    }
+    .container {
+        margin: 20px auto;
     }
 }
